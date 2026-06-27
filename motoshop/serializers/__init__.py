@@ -1,11 +1,15 @@
-# store/serializers/__init__.py
 from .auth import CustomTokenSerializer, CustomTokenView
+from .servicio import ServicioSerializer
+from .proveedor import ProveedorSerializer
+from .compra import CompraSerializer
+from .mantenimiento import MantenimientoSerializer
 from .user import (
     RegisterSerializer,
     UserSerializer,
     UserProfileSerializer,
     ChangePasswordSerializer,
 )
+
 from .marca import MarcaSerializer
 from .categoria_moto import CategoriaMotoSerializer
 from .moto import MotoSerializer
@@ -24,4 +28,11 @@ __all__ = [
     'MotoSerializer',
     'RepuestoSerializer',
     'MovimientoInventarioSerializer',
+    'ProveedorSerializer',
+    'ServicioSerializer', 
+    'CompraSerializer',
+    'MantenimientoSerializer'
 ]
+
+
+
