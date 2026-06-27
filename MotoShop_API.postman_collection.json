@@ -1,0 +1,694 @@
+{
+  "info": {
+    "name": "MotoShop API - CRUD Completo",
+    "_postman_id": "motoshop-crud-2026",
+    "description": "Colección completa para testear las 6 tablas del esquema SQL:\nclientes_perfil, carrito_compras, items_carrito, pedidos, ventas, financiamientos.\n\nFlujo recomendado:\n1. Auth → Register / Login (obtener token)\n2. clientes_perfil → CRUD\n3. carrito_compras → CRUD + acciones custom\n4. items_carrito → CRUD\n5. pedidos → CRUD + confirm + update-status\n6. ventas → CRUD + financiar\n7. financiamientos → CRUD\n\nVariables de colección: base_url, token, admin_token",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url",     "value": "http://localhost:8000/api", "type": "string" },
+    { "key": "token",        "value": "",  "type": "string", "description": "JWT del cliente (se llena automáticamente en Login)" },
+    { "key": "admin_token",  "value": "",  "type": "string", "description": "JWT del admin/vendedor" },
+    { "key": "id_perfil",    "value": "1", "type": "string" },
+    { "key": "id_carrito",   "value": "1", "type": "string" },
+    { "key": "id_item",      "value": "1", "type": "string" },
+    { "key": "id_pedido",    "value": "1", "type": "string" },
+    { "key": "id_venta",     "value": "1", "type": "string" },
+    { "key": "id_financiamiento", "value": "1", "type": "string" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+
+    {
+      "name": "0 - Auth",
+      "item": [
+        {
+          "name": "Register (cliente)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/register/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"cliente1\",\n  \"email\": \"cliente1@motoshop.com\",\n  \"password\": \"Test1234!\",\n  \"password2\": \"Test1234!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (cliente) → guarda token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.access) pm.collectionVariables.set('token', res.access);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"cliente1\",\n  \"password\": \"Test1234!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (admin) → guarda admin_token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.access) pm.collectionVariables.set('admin_token', res.access);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/token/refresh/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"<pega aquí el refresh token>\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/logout/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"<pega aquí el refresh token>\"\n}"
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "1 - clientes_perfil",
+      "item": [
+        {
+          "name": "LIST - Listar perfiles (admin)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "GET",
+            "url": "{{base_url}}/clientes/"
+          }
+        },
+        {
+          "name": "READ - Ver mi perfil",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": "{{base_url}}/clientes/perfil/"
+          }
+        },
+        {
+          "name": "CREATE - Crear mi perfil",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.id_perfil) pm.collectionVariables.set('id_perfil', res.id_perfil);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/clientes/perfil/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cedula\": \"1234567890\",\n  \"telefono\": \"0991234567\",\n  \"direccion\": \"Av. Amazonas N123, Quito\",\n  \"fecha_nacimiento\": \"1995-06-15\"\n}"
+            }
+          }
+        },
+        {
+          "name": "UPDATE - Actualizar mi perfil (PATCH)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/clientes/perfil/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"0999999999\",\n  \"direccion\": \"Calle Nueva 456, Guayaquil\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE - Eliminar mi perfil",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "DELETE",
+            "url": "{{base_url}}/clientes/perfil/"
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "2 - carrito_compras",
+      "item": [
+        {
+          "name": "LIST - Listar carritos",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/carritos/",
+              "query": [
+                { "key": "estado", "value": "activo", "disabled": true },
+                { "key": "from_date", "value": "2025-01-01", "disabled": true },
+                { "key": "to_date",   "value": "2025-12-31", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "CREATE - Crear carrito",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.id_carrito) pm.collectionVariables.set('id_carrito', res.id_carrito);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/carritos/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"activo\"\n}"
+            }
+          }
+        },
+        {
+          "name": "READ - Detalle de carrito",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": "{{base_url}}/carritos/{{id_carrito}}/"
+          }
+        },
+        {
+          "name": "UPDATE - Cambiar estado del carrito (PATCH)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/carritos/{{id_carrito}}/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"activo\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE - Eliminar carrito",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "DELETE",
+            "url": "{{base_url}}/carritos/{{id_carrito}}/"
+          }
+        },
+        {
+          "name": "ACTION - Carrito activo del usuario",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": "{{base_url}}/carritos/activo/"
+          }
+        },
+        {
+          "name": "ACTION - Agregar ítem al carrito (moto)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/carritos/{{id_carrito}}/add-item/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_moto\": 1,\n  \"cantidad\": 1,\n  \"precio_unitario\": \"15000.00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "ACTION - Agregar ítem al carrito (repuesto)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/carritos/{{id_carrito}}/add-item/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_repuesto\": 5,\n  \"cantidad\": 2,\n  \"precio_unitario\": \"250.00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "ACTION - Quitar ítem del carrito",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "DELETE",
+            "url": "{{base_url}}/carritos/{{id_carrito}}/remove-item/{{id_item}}/"
+          }
+        },
+        {
+          "name": "ACTION - Vaciar carrito",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "url": "{{base_url}}/carritos/{{id_carrito}}/vaciar/"
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "3 - items_carrito",
+      "item": [
+        {
+          "name": "LIST - Listar ítems (filtrar por carrito)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/items-carrito/",
+              "query": [
+                { "key": "id_carrito",  "value": "{{id_carrito}}", "disabled": true },
+                { "key": "id_moto",     "value": "1",              "disabled": true },
+                { "key": "id_repuesto", "value": "5",              "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "CREATE - Crear ítem directamente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.id_item) pm.collectionVariables.set('id_item', res.id_item);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/items-carrito/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_carrito\": {{id_carrito}},\n  \"id_moto\": 2,\n  \"cantidad\": 1,\n  \"precio_unitario\": \"8500.00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "READ - Detalle de ítem",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": "{{base_url}}/items-carrito/{{id_item}}/"
+          }
+        },
+        {
+          "name": "UPDATE - Editar cantidad / precio (PATCH)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/items-carrito/{{id_item}}/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cantidad\": 3,\n  \"precio_unitario\": \"8200.00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE - Eliminar ítem",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "DELETE",
+            "url": "{{base_url}}/items-carrito/{{id_item}}/"
+          }
+        },
+        {
+          "name": "ACTION - Estadísticas (admin)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "GET",
+            "url": "{{base_url}}/items-carrito/stats/"
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "4 - pedidos",
+      "item": [
+        {
+          "name": "LIST - Listar pedidos",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/pedidos/",
+              "query": [
+                { "key": "estado",    "value": "pending",    "disabled": true },
+                { "key": "from_date", "value": "2025-01-01", "disabled": true },
+                { "key": "to_date",   "value": "2025-12-31", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "CREATE - Crear pedido desde carrito activo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.id_pedido) pm.collectionVariables.set('id_pedido', res.id_pedido);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/pedidos/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_carrito\": {{id_carrito}}\n}"
+            }
+          }
+        },
+        {
+          "name": "READ - Detalle de pedido",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "GET",
+            "url": "{{base_url}}/pedidos/{{id_pedido}}/"
+          }
+        },
+        {
+          "name": "UPDATE - Editar pedido (PATCH, solo admin)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/pedidos/{{id_pedido}}/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"confirmed\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE - Eliminar pedido (solo admin)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "DELETE",
+            "url": "{{base_url}}/pedidos/{{id_pedido}}/"
+          }
+        },
+        {
+          "name": "ACTION - Confirmar pedido (pending → confirmed)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }] },
+            "method": "POST",
+            "url": "{{base_url}}/pedidos/{{id_pedido}}/confirm/"
+          }
+        },
+        {
+          "name": "ACTION - Cambiar estado (solo admin)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/pedidos/{{id_pedido}}/update-status/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"shipped\"\n}"
+            }
+          }
+        },
+        {
+          "name": "ACTION - Estadísticas pedidos (admin)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "GET",
+            "url": "{{base_url}}/pedidos/stats/"
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "5 - ventas",
+      "item": [
+        {
+          "name": "LIST - Listar ventas",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/ventas/",
+              "query": [
+                { "key": "estado",    "value": "completada",  "disabled": true },
+                { "key": "from_date", "value": "2025-01-01",  "disabled": true },
+                { "key": "to_date",   "value": "2025-12-31",  "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "CREATE - Registrar venta (admin/vendedor)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.id_venta) pm.collectionVariables.set('id_venta', res.id_venta);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/ventas/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_pedido\": {{id_pedido}},\n  \"total_venta\": \"15000.00\",\n  \"estado\": \"completada\"\n}"
+            }
+          }
+        },
+        {
+          "name": "READ - Detalle de venta",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "GET",
+            "url": "{{base_url}}/ventas/{{id_venta}}/"
+          }
+        },
+        {
+          "name": "UPDATE - Editar estado de venta (PATCH)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/ventas/{{id_venta}}/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"completada\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE - Anular venta (admin)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "DELETE",
+            "url": "{{base_url}}/ventas/{{id_venta}}/"
+          }
+        },
+        {
+          "name": "ACTION - Agregar financiamiento a venta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.id_financiamiento) pm.collectionVariables.set('id_financiamiento', res.id_financiamiento);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/ventas/{{id_venta}}/financiar/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"entidad_financiera\": \"Banco Pichincha\",\n  \"monto_financiado\": \"12000.00\",\n  \"tasa_interes\": \"12.50\",\n  \"plazo_meses\": 24,\n  \"cuota_mensual\": \"566.77\",\n  \"estado\": \"activo\"\n}"
+            }
+          }
+        },
+        {
+          "name": "ACTION - Estadísticas ventas (admin)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "GET",
+            "url": "{{base_url}}/ventas/stats/"
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "6 - financiamientos",
+      "item": [
+        {
+          "name": "LIST - Listar financiamientos",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/financiamientos/",
+              "query": [
+                { "key": "estado",             "value": "activo",           "disabled": true },
+                { "key": "id_venta",           "value": "1",                "disabled": true },
+                { "key": "entidad_financiera", "value": "Banco Pichincha",  "disabled": true },
+                { "key": "monto_min",          "value": "5000",             "disabled": true },
+                { "key": "monto_max",          "value": "20000",            "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "CREATE - Crear financiamiento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.id_financiamiento) pm.collectionVariables.set('id_financiamiento', res.id_financiamiento);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/financiamientos/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_venta\": {{id_venta}},\n  \"entidad_financiera\": \"Banco del Pacífico\",\n  \"monto_financiado\": \"10000.00\",\n  \"tasa_interes\": \"10.00\",\n  \"plazo_meses\": 12,\n  \"cuota_mensual\": \"879.16\",\n  \"estado\": \"activo\"\n}"
+            }
+          }
+        },
+        {
+          "name": "READ - Detalle de financiamiento",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "GET",
+            "url": "{{base_url}}/financiamientos/{{id_financiamiento}}/"
+          }
+        },
+        {
+          "name": "UPDATE - Editar financiamiento (PATCH)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/financiamientos/{{id_financiamiento}}/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"pagado\",\n  \"cuota_mensual\": \"900.00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE - Eliminar financiamiento",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "DELETE",
+            "url": "{{base_url}}/financiamientos/{{id_financiamiento}}/"
+          }
+        },
+        {
+          "name": "ACTION - Estadísticas financiamientos (admin)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{ "key": "token", "value": "{{admin_token}}", "type": "string" }] },
+            "method": "GET",
+            "url": "{{base_url}}/financiamientos/stats/"
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "7 - Health Check",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/health/"
+          }
+        }
+      ]
+    }
+
+  ]
+}
