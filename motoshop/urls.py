@@ -4,11 +4,23 @@ from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
 from motoshop.views.health import health_check
 from motoshop.views.auth   import RegisterView, LogoutView
-from motoshop.views.user   import UserViewSet
+from motoshop.views import (
+    UserViewSet,
+    MarcaViewSet,
+    CategoriaMotoViewSet,
+    MotoViewSet,
+    RepuestoViewSet,
+    MovimientoInventarioViewSet
+)
 from motoshop.serializers.auth import CustomTokenView
 
 router = DefaultRouter()
 router.register('users', UserViewSet, basename='user')
+router.register('marcas', MarcaViewSet, basename='marca')
+router.register('categorias-moto', CategoriaMotoViewSet, basename='categoria-moto')
+router.register('motos', MotoViewSet, basename='moto')
+router.register('repuestos', RepuestoViewSet, basename='repuesto')
+router.register('movimientos-inventario', MovimientoInventarioViewSet, basename='movimiento-inventario')
 
 urlpatterns = [
     path('health/',             health_check),
