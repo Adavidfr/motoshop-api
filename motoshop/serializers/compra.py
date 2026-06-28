@@ -37,12 +37,15 @@ class CompraSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, data):
-        if not data.get('moto') and not data.get('repuesto'):
+        moto = data.get('moto', getattr(self.instance, 'moto', None))
+        repuesto = data.get('repuesto', getattr(self.instance, 'repuesto', None))
+
+        if not moto and not repuesto:
             raise serializers.ValidationError(
                 "Debe seleccionar una moto o un repuesto."
             )
 
-        if data.get('moto') and data.get('repuesto'):
+        if moto and repuesto:
             raise serializers.ValidationError(
                 "Solo puede seleccionar una moto o un repuesto."
             )
