@@ -45,9 +45,23 @@ class VentaCreateSerializer(serializers.ModelSerializer):
     Body: { "id_pedido": 1, "total_venta": "15000.00", "estado": "completada" }
     """
     id_pedido = serializers.PrimaryKeyRelatedField(
-        queryset=Pedido.objects.filter(estado='confirmed'),
+        queryset=Pedido.objects.all(),
     )
 
     class Meta:
         model  = Venta
         fields = ['id_pedido', 'total_venta', 'estado']
+
+    def validate_id_pedido(self, pedido):
+        estados_validos = ('confirmed', 'shipped', 'delivered')
+        if pedido.estado not in estados_validos:
+            raise serializers.ValidationError(
+                f'El pedido debe estar en estado confirmado, enviado o entregado. '
+                f'Estado actual: "{pedido.estado}".'
+            )
+        return pedido
+
+    def validate_total_venta(self, value):
+        if value <= 0:
+            raise serializers.ValidationError('El total de la venta debe ser mayor a 0.')
+        return value

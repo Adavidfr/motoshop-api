@@ -18,6 +18,8 @@ class ItemCarritoSerializer(serializers.ModelSerializer):
     def validate(self, data):
         id_moto     = data.get('id_moto')
         id_repuesto = data.get('id_repuesto')
+        if self.partial and not id_moto and not id_repuesto:
+            return data
         if not id_moto and not id_repuesto:
             raise serializers.ValidationError(
                 'Debe especificar id_moto o id_repuesto.'

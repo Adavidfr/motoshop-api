@@ -1,4 +1,5 @@
 # motoshop/views/venta.py
+from django.db.models.deletion import ProtectedError
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -78,6 +79,21 @@ class VentaViewSet(viewsets.ModelViewSet):
             id_usuario_cliente  = pedido.id_usuario_cliente,
             id_usuario_vendedor = self.request.user,
         )
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except ProtectedError as e:
+            modelos_relacionados = ', '.join(
+                str(obj) for obj in list(e.protected_objects)[:5]
+            )
+            return Response(
+                {
+                    'error': 'No se puede eliminar la venta porque tiene registros relacionados.',
+                    'detalle': f'Financiamientos asociados: {modelos_relacionados}',
+                },
+                status=status.HTTP_409_CONFLICT,
+            )
 
     # ------------------------------------------------------------------ #
     #  Action: agregar financiamiento                                       #
