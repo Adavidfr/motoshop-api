@@ -1,4 +1,4 @@
-me dio esto <div align="center">
+<div align="center">
 
 <img src="https://ute.edu.ec/wp-content/uploads/2021/08/LogoUteTrans.png" alt="UTE - Escuela de Tecnologías" width="250"/>
 
@@ -15,50 +15,32 @@ me dio esto <div align="center">
 
 <p><strong>Carrera:</strong> Desarrollo de Software</p>
 
-<p><strong>Asignatura:</strong> Programación IV</p>
+<p><strong>Asignatura:</strong> Programación IV - Seminario de Integración</p>
 
 </div>
 
 <br><br>
 
-<p><strong>Tema:</strong> SEMINARIO DE INTEGRACIÓN - Construcción de Backend Django.</p>
+<p><strong>Tema:</strong> Desarrollo de backend con django rest framework y postgresql</p>
 
 <br>
 
-<p><strong>Fecha:</strong> 03/06/2026</p>
+<p><strong>Fecha:</strong> 27/06/2026</p>
 
 <p><strong>Presentado por:</strong></p>
 
 <ul>
-  <li>Alquinga Carlos</li>
-  <li>Andrés Zambrano</li>
-  <li>Melanie Estévez</li>
-  <li>David Frias</li>
+<li>Alquinga Carlos</li>
+<li>Zambrano Andrés</li>
+<li>Estévez Melanie</li>
+<li>Frías David</li>
 </ul>
 
 <p><strong>Docente:</strong> Francisco Javier Higuera González </p>
-
-<hr>
-
-# Venta de Motos - API
-
 <br>
+<h1>Venta de Motos - API</h1>
 
-<div align="center">
-
-<h2>Sistema Backend para la Gestión de Venta de Motos</h2>
-
-<p>
-API REST desarrollada con Django, Django REST Framework y PostgreSQL para administrar los procesos principales de una empresa dedicada a la venta, abastecimiento, inventario, mantenimiento y gestión financiera de motos.
-</p>
-
-</div>
-
-<br>
-
-<hr>
-
-<div style="border-left: 4px solid #1e88e5; padding-left: 15px; margin-top: 20px;">
+<div style="border-left:5px solid #1d5c20;padding-left:15px">
 
 <h2>Descripción del Proyecto</h2>
 
@@ -479,52 +461,214 @@ Las operaciones de creación, actualización y eliminación requieren autenticac
 
 <br>
 
-<div style="border-left: 4px solid #00838f; padding-left: 15px; margin-top: 20px;">
+<div style="border-left:5px solid #00897b;padding-left:15px">
 
 <h2>Instalación y Ejecución</h2>
 
-<h3>Clonar el repositorio</h3>
+<h3>1. Clonar repositorio</h3>
 
 <pre>
 git clone URL_DEL_REPOSITORIO
+
 cd motoshop-api
 </pre>
 
-<h3>Crear y activar entorno virtual</h3>
+<h3>2. Instalar uv</h3>
 
 <pre>
-python -m venv .venv
+pip install uv
+</pre>
+
+<h3>3. Crear entorno virtual</h3>
+
+<pre>
+uv venv
+</pre>
+
+Activar entorno:
+
+<h4>Windows</h4>
+
+<pre>
 .venv\Scripts\activate
 </pre>
 
-<h3>Instalar dependencias</h3>
+<h4>Linux / Mac</h4>
 
 <pre>
-pip install -r requirements.txt
+source .venv/bin/activate
 </pre>
 
-<h3>Aplicar migraciones</h3>
+<h3>4. Instalar dependencias</h3>
 
 <pre>
-python manage.py migrate
+uv sync
 </pre>
 
-<h3>Crear superusuario</h3>
+<h3>5. Configurar PostgreSQL</h3>
+
+Ingresar:
 
 <pre>
-python manage.py createsuperuser
+psql -U postgres
 </pre>
 
-<h3>Ejecutar servidor</h3>
+Ejecutar:
 
 <pre>
-python manage.py runserver
+CREATE USER motoshop_user
+WITH PASSWORD 'motoshop_pass';
+
+CREATE DATABASE motoshop_db
+OWNER motoshop_user;
+
+GRANT ALL PRIVILEGES
+ON DATABASE motoshop_db
+TO motoshop_user;
+
+\q
+</pre>
+
+<h3>6. Configurar conexión</h3>
+
+<pre>
+DB_NAME=motoshop_db
+DB_USER=motoshop_user
+DB_PASSWORD=motoshop_pass
+DB_HOST=localhost
+DB_PORT=5432
+</pre>
+
+<h3>7. Creación del archivo .env</h3>
+
+<p>
+Crear un archivo <strong>.env</strong> en la raíz del proyecto y copiar la siguiente configuración:
+</p>
+
+<pre>
+# Django
+SECRET_KEY=django-insecure-change-this-in-production
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# PostgreSQL
+DB_NAME=motoshop_db
+DB_USER=motoshop_user
+DB_PASSWORD=motoshop_pass
+DB_HOST=localhost
+DB_PORT=5432
+
+# CORS
+CORS_ALLOW_ALL_ORIGINS=True
+</pre>
+<h3>8. Aplicar migraciones</h3>
+
+<pre>
+uv run python manage.py migrate
+</pre>
+
+<h3>8. Crear superusuario</h3>
+
+<pre>
+uv run python manage.py createsuperuser
+</pre>
+
+Credenciales utilizadas:
+
+<pre>
+Usuario: admin
+
+Correo:
+admin@motoshop.com
+
+Contraseña:
+Motoshop1234!
+</pre>
+
+<h3>9. Ejecutar servidor</h3>
+
+<pre>
+uv sync
+
+uv run python manage.py runserver
+</pre>
+
+Servidor:
+
+<pre>
+http://127.0.0.1:8000/
 </pre>
 
 </div>
 
 <br>
 
+<div style="border-left: 4px solid #8e24aa; padding-left: 15px; margin-top: 20px;">
+
+<h2>Despliegue</h2>
+
+<p>
+La API fue preparada para ejecutarse en un servidor virtual privado (VPS), utilizando Ubuntu Server y PostgreSQL como base de datos principal. El despliegue incluye la configuración del entorno de producción, dependencias y migraciones necesarias para la ejecución del proyecto.
+</p>
+
+<h3>Configuración del VPS</h3>
+
+<ul>
+    <li><strong>Proveedor:</strong> DigitalOcean.</li>
+    <li><strong>Servidor:</strong> Droplet.</li>
+    <li><strong>Sistema Operativo:</strong> Ubuntu 22.04 LTS.</li>
+    <li><strong>Acceso:</strong> SSH.</li>
+    <li><strong>Directorio del proyecto:</strong> <code>/var/www/motoshop-api</code>.</li>
+    <li><strong>Variables de entorno:</strong> Archivo <code>.env</code> configurado para producción (<code>DEBUG=False</code>).</li>
+    <li><strong>Entorno virtual:</strong> Python Virtual Environment.</li>
+</ul>
+
+<h3>Instalación de dependencias</h3>
+
+<p>
+Para administrar las dependencias del proyecto se utilizó <strong>uv</strong>.
+</p>
+
+<pre>
+pip install uv
+
+uv pip install -r pyproject.toml
+</pre>
+
+<h3>Configuración de PostgreSQL</h3>
+
+<p>
+Se instaló PostgreSQL en el servidor y se creó una base de datos exclusiva para la aplicación junto con un usuario dedicado.
+</p>
+
+<pre>
+CREATE USER motoshop_user
+WITH PASSWORD 'motoshop_pass';
+
+CREATE DATABASE motoshop_db
+OWNER motoshop_user;
+
+GRANT ALL PRIVILEGES
+ON DATABASE motoshop_db
+TO motoshop_user;
+</pre>
+
+<h3>Migraciones</h3>
+
+<p>
+Después de configurar la conexión con PostgreSQL se ejecutaron las migraciones para crear el esquema de la base de datos.
+</p>
+
+<pre>
+python manage.py migrate
+</pre>
+
+<p>
+Con esta configuración el proyecto quedó listo para ejecutarse en un entorno de producción sobre un servidor VPS utilizando Django y PostgreSQL.
+</p>
+
+</div>
+<br>
 <div style="border-left: 4px solid #5d4037; padding-left: 15px; margin-top: 20px;">
 
 <h2>Pruebas con Postman</h2>
@@ -539,22 +683,6 @@ Los endpoints fueron probados utilizando Postman. Para consumir los endpoints pr
 Authorization: Bearer TOKEN_DE_ACCESO
 Content-Type: application/json
 </pre>
-
-<h3>Ejemplo de creación de proveedor</h3>
-
-<pre>
-POST /api/proveedores/
-
-{
-  "nombre": "Yamaha Ecuador",
-  "contacto": "Carlos Pérez",
-  "telefono": "0991234567",
-  "correo": "ventas@yamaha.com",
-  "direccion": "Quito",
-  "estado": true
-}
-</pre>
-
 </div>
 
 <br>
@@ -614,10 +742,14 @@ POST /api/proveedores/
 
 <div align="center">
 
-<p><strong>Venta de Motos - API</strong></p>
+<h3>Venta de Motos - API</h3>
 
-<p>Backend desarrollado con Django REST Framework</p>
+<p>
+Backend desarrollado con Django REST Framework
+</p>
 
-<p>Universidad Tecnológica Equinoccial - Escuela de Tecnologías</p>
+<p>
+Universidad Tecnológica Equinoccial
+</p>
 
 </div>
