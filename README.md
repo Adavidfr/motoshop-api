@@ -567,7 +567,7 @@ CORS_ALLOW_ALL_ORIGINS=True
 uv run python manage.py migrate
 </pre>
 
-<h3>8. Crear superusuario</h3>
+<h3>9. Crear superusuario</h3>
 
 <pre>
 uv run python manage.py createsuperuser
@@ -585,7 +585,7 @@ Contraseña:
 Motoshop1234!
 </pre>
 
-<h3>9. Ejecutar servidor</h3>
+<h3>10. Ejecutar servidor</h3>
 
 <pre>
 uv sync
