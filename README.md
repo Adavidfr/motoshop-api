@@ -608,10 +608,10 @@ http://127.0.0.1:8000/
 <h2>Despliegue</h2>
 
 <p>
-La API fue preparada para ejecutarse en un servidor virtual privado (VPS), utilizando Ubuntu Server y PostgreSQL como base de datos principal. El despliegue incluye la configuración del entorno de producción, dependencias y migraciones necesarias para la ejecución del proyecto.
+La API fue preparada para ejecutarse en un servidor virtual privado (VPS), utilizando Ubuntu Server, PostgreSQL, Gunicorn y Nginx como componentes principales para el entorno de producción.
 </p>
 
-<h3>Configuración del VPS</h3>
+<h3>Infraestructura del servidor</h3>
 
 <ul>
     <li><strong>Proveedor:</strong> DigitalOcean.</li>
@@ -623,10 +623,10 @@ La API fue preparada para ejecutarse en un servidor virtual privado (VPS), utili
     <li><strong>Entorno virtual:</strong> Python Virtual Environment.</li>
 </ul>
 
-<h3>Instalación de dependencias</h3>
+<h3>Instalación del entorno</h3>
 
 <p>
-Para administrar las dependencias del proyecto se utilizó <strong>uv</strong>.
+Las dependencias del proyecto fueron instaladas utilizando <strong>uv</strong>.
 </p>
 
 <pre>
@@ -638,7 +638,7 @@ uv pip install -r pyproject.toml
 <h3>Configuración de PostgreSQL</h3>
 
 <p>
-Se instaló PostgreSQL en el servidor y se creó una base de datos exclusiva para la aplicación junto con un usuario dedicado.
+Se instaló PostgreSQL como gestor de base de datos y se creó un usuario dedicado con los permisos necesarios para la aplicación.
 </p>
 
 <pre>
@@ -653,20 +653,92 @@ ON DATABASE motoshop_db
 TO motoshop_user;
 </pre>
 
-<h3>Migraciones</h3>
+<h3>Configuración de Gunicorn</h3>
 
 <p>
-Después de configurar la conexión con PostgreSQL se ejecutaron las migraciones para crear el esquema de la base de datos.
+Se utilizó <strong>Gunicorn</strong> como servidor WSGI para ejecutar la aplicación Django en producción. El servicio fue configurado mediante <strong>Systemd</strong> para iniciarse automáticamente junto con el sistema operativo.
+</p>
+
+<p>
+Archivo de configuración:
 </p>
 
 <pre>
-python manage.py migrate
+/etc/systemd/system/gunicorn.service
 </pre>
 
 <p>
-Con esta configuración el proyecto quedó listo para ejecutarse en un entorno de producción sobre un servidor VPS utilizando Django y PostgreSQL.
+Configuración principal:
 </p>
 
+<pre>
+[Service]
+WorkingDirectory=/var/www/motoshop-api
+ExecStart=/var/www/motoshop-api/.venv/bin/gunicorn \
+    --workers 3 \
+    --bind unix:/run/gunicorn.sock \
+    config.wsgi:application
+</pre>
+
+<h3>Configuración de Nginx</h3>
+
+<p>
+Nginx fue configurado como proxy inverso para recibir las solicitudes HTTP en el puerto 80 y redirigirlas hacia Gunicorn mediante un socket Unix. Además, administra la entrega de los archivos estáticos utilizados por Django Admin y la documentación de la API.
+</p>
+
+<p>
+Configuración principal:
+</p>
+
+<pre>
+server {
+    listen 80;
+    server_name 157.230.187.220;
+
+    location /static/ {
+        root /var/www/motoshop-api;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
+    }
+}
+</pre>
+
+<h3>Arquitectura del despliegue</h3>
+
+<pre>
+                 Internet
+                     │
+                     ▼
+             Nginx (Puerto 80)
+                     │
+                     ▼
+      Gunicorn (unix:/run/gunicorn.sock)
+                     │
+                     ▼
+          Django REST Framework
+                     │
+                     ▼
+               PostgreSQL
+</pre>
+
+<h3>Migraciones</h3>
+
+<p>
+Una vez configurado el servidor y la base de datos, se ejecutaron las migraciones para generar el esquema completo de la aplicación.
+</p>
+
+<pre>
+python manage.py makemigrations
+python manage.py migrate
+python manage.py collectstatic
+</pre>
+
+<p>
+Con esta configuración el backend quedó preparado para ejecutarse en un entorno de producción utilizando Django, PostgreSQL, Gunicorn y Nginx sobre Ubuntu Server, proporcionando una arquitectura estable y adecuada para el despliegue de la API REST.
+</p>
 </div>
 <br>
 <div style="border-left: 4px solid #5d4037; padding-left: 15px; margin-top: 20px;">
