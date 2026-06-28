@@ -1,0 +1,39 @@
+{
+  "id": "e44d57c7-0e24-4ba2-921c-a968a3013d52",
+  "name": "MotoShop API - Production VPS",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://157.230.187.220/api",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "admin_username",
+      "value": "admin",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "admin_password",
+      "value": "Motoshop1234!",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "secret",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2026-06-28T22:54:00.000Z",
+  "_postman_exported_using": "Postman/10.0.0"
+}

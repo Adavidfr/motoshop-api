@@ -1,0 +1,4139 @@
+{
+  "info": {
+    "_postman_id": "8939a3f2-1b12-4eb1-998f-4d3725b821cf",
+    "name": "MotoShop API - Completa",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Autenticaci\u00f3n",
+      "item": [
+        {
+          "name": "Iniciar Sesi\u00f3n (Obtener Token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.access) {",
+                  "    pm.environment.set(\"access_token\", jsonData.access);",
+                  "}",
+                  "if (jsonData.refresh) {",
+                  "    pm.environment.set(\"refresh_token\", jsonData.refresh);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{admin_username}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Refrescar Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/token/refresh/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "token",
+                "refresh",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Verificar Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{access_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/token/verify/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "token",
+                "verify",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Registrar Usuario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"nuevo_usuario\",\n  \"password\": \"Contrasena123!\",\n  \"email\": \"nuevo@motoshop.com\",\n  \"first_name\": \"Nombre\",\n  \"last_name\": \"Apellido\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cerrar Sesi\u00f3n",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/logout/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "Ver Mi Perfil de Cliente",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/clientes/perfil/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "perfil",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Mi Perfil de Cliente",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"0999999999\",\n  \"direccion\": \"Direccion nueva\",\n  \"cedula_ruc\": \"1799999999001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/clientes/perfil/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "perfil",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Listar Todos los Perfiles (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/clientes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "Listar Usuarios",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Usuarios",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"usuario_test\",\n  \"email\": \"test@gmail.com\",\n  \"first_name\": \"Test\",\n  \"last_name\": \"User\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Usuarios",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Usuarios",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"usuario_test\",\n  \"email\": \"test@gmail.com\",\n  \"first_name\": \"Test\",\n  \"last_name\": \"User\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Usuarios",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Marcas",
+      "item": [
+        {
+          "name": "Listar Marcas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/marcas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "marcas",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Marcas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Marca Test\",\n  \"descripcion\": \"Descripcion de prueba\",\n  \"estado\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/marcas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "marcas",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Marcas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/marcas/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "marcas",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Marcas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Marca Test\",\n  \"descripcion\": \"Descripcion de prueba\",\n  \"estado\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/marcas/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "marcas",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Marcas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/marcas/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "marcas",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categorias Moto",
+      "item": [
+        {
+          "name": "Listar Categorias Moto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categorias-moto/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias-moto",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Categorias Moto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Scooter\",\n  \"descripcion\": \"Motos scooter\",\n  \"estado\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/categorias-moto/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias-moto",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Categorias Moto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categorias-moto/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias-moto",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Categorias Moto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Scooter\",\n  \"descripcion\": \"Motos scooter\",\n  \"estado\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/categorias-moto/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias-moto",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Categorias Moto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/categorias-moto/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "categorias-moto",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Motos",
+      "item": [
+        {
+          "name": "Listar Motos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/motos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Motos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelo\": \"Scooter 150cc\",\n  \"color\": \"Rojo\",\n  \"precio\": \"1800.00\",\n  \"anio\": 2026,\n  \"stock\": 5,\n  \"estado\": true,\n  \"marca\": 1,\n  \"categoria\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/motos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Motos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/motos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Motos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelo\": \"Scooter 150cc\",\n  \"color\": \"Rojo\",\n  \"precio\": \"1800.00\",\n  \"anio\": 2026,\n  \"stock\": 5,\n  \"estado\": true,\n  \"marca\": 1,\n  \"categoria\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/motos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Motos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/motos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "motos",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Repuestos",
+      "item": [
+        {
+          "name": "Listar Repuestos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/repuestos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Repuestos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sku\": \"REP-001\",\n  \"nombre\": \"Bateria 12V\",\n  \"descripcion\": \"Bateria de moto 12V\",\n  \"costo\": \"35.00\",\n  \"precio_venta\": \"50.00\",\n  \"stock\": 20,\n  \"estado\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/repuestos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Repuestos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/repuestos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Repuestos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sku\": \"REP-001\",\n  \"nombre\": \"Bateria 12V\",\n  \"descripcion\": \"Bateria de moto 12V\",\n  \"costo\": \"35.00\",\n  \"precio_venta\": \"50.00\",\n  \"stock\": 20,\n  \"estado\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/repuestos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Repuestos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/repuestos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Movimientos Inventario",
+      "item": [
+        {
+          "name": "Listar Movimientos Inventario",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/movimientos-inventario/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movimientos-inventario",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Movimientos Inventario",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo_movimiento\": \"ENTRADA\",\n  \"cantidad\": 10,\n  \"descripcion\": \"Ingreso por compra\",\n  \"moto\": 1,\n  \"repuesto\": null\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/movimientos-inventario/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movimientos-inventario",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Movimientos Inventario",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/movimientos-inventario/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movimientos-inventario",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Movimientos Inventario",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo_movimiento\": \"ENTRADA\",\n  \"cantidad\": 10,\n  \"descripcion\": \"Ingreso por compra\",\n  \"moto\": 1,\n  \"repuesto\": null\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/movimientos-inventario/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movimientos-inventario",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Movimientos Inventario",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/movimientos-inventario/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "movimientos-inventario",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Proveedores",
+      "item": [
+        {
+          "name": "Listar Proveedores",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/proveedores/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Proveedores",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Distribuidora Repuestos\",\n  \"contacto\": \"Juan Perez\",\n  \"telefono\": \"0987654321\",\n  \"email\": \"proveedor@test.com\",\n  \"direccion\": \"Av. Principal 123\",\n  \"estado\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/proveedores/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Proveedores",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/proveedores/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Proveedores",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Distribuidora Repuestos\",\n  \"contacto\": \"Juan Perez\",\n  \"telefono\": \"0987654321\",\n  \"email\": \"proveedor@test.com\",\n  \"direccion\": \"Av. Principal 123\",\n  \"estado\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/proveedores/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Proveedores",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/proveedores/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "proveedores",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Servicios",
+      "item": [
+        {
+          "name": "Listar Servicios",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/servicios/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "servicios",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Servicios",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Cambio de Aceite\",\n  \"descripcion\": \"Cambio de aceite y filtro\",\n  \"precio\": \"15.00\",\n  \"duracion_estimada\": \"00:30:00\",\n  \"estado\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/servicios/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "servicios",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Servicios",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/servicios/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "servicios",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Servicios",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Cambio de Aceite\",\n  \"descripcion\": \"Cambio de aceite y filtro\",\n  \"precio\": \"15.00\",\n  \"duracion_estimada\": \"00:30:00\",\n  \"estado\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/servicios/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "servicios",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Servicios",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/servicios/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "servicios",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Compras",
+      "item": [
+        {
+          "name": "Listar Compras",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/compras/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "compras",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Compras",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"proveedor\": 1,\n  \"tipo_item\": \"MOTO\",\n  \"moto\": 1,\n  \"repuesto\": null,\n  \"cantidad\": 5,\n  \"costo_unitario\": \"1500.00\",\n  \"total\": \"7500.00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/compras/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "compras",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Compras",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/compras/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "compras",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Compras",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"proveedor\": 1,\n  \"tipo_item\": \"MOTO\",\n  \"moto\": 1,\n  \"repuesto\": null,\n  \"cantidad\": 5,\n  \"costo_unitario\": \"1500.00\",\n  \"total\": \"7500.00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/compras/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "compras",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Compras",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/compras/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "compras",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mantenimientos",
+      "item": [
+        {
+          "name": "Listar Mantenimientos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/mantenimientos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mantenimientos",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Mantenimientos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": 1,\n  \"moto\": 1,\n  \"descripcion\": \"Mantenimiento preventivo\",\n  \"costo_total\": \"25.00\",\n  \"estado_mantenimiento\": \"PENDIENTE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/mantenimientos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mantenimientos",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Mantenimientos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/mantenimientos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mantenimientos",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Mantenimientos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cliente\": 1,\n  \"moto\": 1,\n  \"descripcion\": \"Mantenimiento preventivo\",\n  \"costo_total\": \"25.00\",\n  \"estado_mantenimiento\": \"PENDIENTE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/mantenimientos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mantenimientos",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Mantenimientos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/mantenimientos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "mantenimientos",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Repuestos Mantenimiento",
+      "item": [
+        {
+          "name": "Listar Repuestos Mantenimiento",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/repuestos-mantenimiento/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos-mantenimiento",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Repuestos Mantenimiento",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mantenimiento\": 1,\n  \"repuesto\": 1,\n  \"cantidad\": 1,\n  \"precio_unitario\": \"50.00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/repuestos-mantenimiento/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos-mantenimiento",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Repuestos Mantenimiento",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/repuestos-mantenimiento/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos-mantenimiento",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Repuestos Mantenimiento",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mantenimiento\": 1,\n  \"repuesto\": 1,\n  \"cantidad\": 1,\n  \"precio_unitario\": \"50.00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/repuestos-mantenimiento/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos-mantenimiento",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Repuestos Mantenimiento",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/repuestos-mantenimiento/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "repuestos-mantenimiento",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Carritos",
+      "item": [
+        {
+          "name": "Listar Carritos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/carritos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "carritos",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Carritos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/carritos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "carritos",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Carritos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/carritos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "carritos",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Carritos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/carritos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "carritos",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Carritos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/carritos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "carritos",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Items Carrito",
+      "item": [
+        {
+          "name": "Listar Items Carrito",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/items-carrito/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "items-carrito",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Items Carrito",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"carrito\": 1,\n  \"tipo_item\": \"REPUESTO\",\n  \"moto\": null,\n  \"repuesto\": 1,\n  \"cantidad\": 2,\n  \"precio_unitario\": \"50.00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/items-carrito/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "items-carrito",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Items Carrito",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/items-carrito/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "items-carrito",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Items Carrito",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"carrito\": 1,\n  \"tipo_item\": \"REPUESTO\",\n  \"moto\": null,\n  \"repuesto\": 1,\n  \"cantidad\": 2,\n  \"precio_unitario\": \"50.00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/items-carrito/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "items-carrito",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Items Carrito",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/items-carrito/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "items-carrito",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pedidos",
+      "item": [
+        {
+          "name": "Listar Pedidos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pedidos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pedidos",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Pedidos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subtotal\": \"100.00\",\n  \"impuestos\": \"12.00\",\n  \"total\": \"112.00\",\n  \"metodo_pago\": \"EFECTIVO\",\n  \"direccion_envio\": \"Av. de los Shyris\",\n  \"estado_pedido\": \"PENDIENTE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pedidos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pedidos",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Pedidos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pedidos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pedidos",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Pedidos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subtotal\": \"100.00\",\n  \"impuestos\": \"12.00\",\n  \"total\": \"112.00\",\n  \"metodo_pago\": \"EFECTIVO\",\n  \"direccion_envio\": \"Av. de los Shyris\",\n  \"estado_pedido\": \"PENDIENTE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pedidos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pedidos",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Pedidos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pedidos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pedidos",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ventas",
+      "item": [
+        {
+          "name": "Listar Ventas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ventas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Ventas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pedido\": 1,\n  \"subtotal\": \"100.00\",\n  \"impuestos\": \"12.00\",\n  \"total\": \"112.00\",\n  \"estado_venta\": \"COMPLETADA\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ventas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Ventas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ventas/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Ventas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pedido\": 1,\n  \"subtotal\": \"100.00\",\n  \"impuestos\": \"12.00\",\n  \"total\": \"112.00\",\n  \"estado_venta\": \"COMPLETADA\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ventas/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Ventas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/ventas/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ventas",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Financiamientos",
+      "item": [
+        {
+          "name": "Listar Financiamientos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/financiamientos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "financiamientos",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Financiamientos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": 1,\n  \"monto_financiado\": \"100.00\",\n  \"plazo_meses\": 12,\n  \"tasa_interes\": \"12.00\",\n  \"cuota_mensual\": \"9.33\",\n  \"estado_financiamiento\": \"VIGENTE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/financiamientos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "financiamientos",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Financiamientos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/financiamientos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "financiamientos",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Financiamientos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": 1,\n  \"monto_financiado\": \"100.00\",\n  \"plazo_meses\": 12,\n  \"tasa_interes\": \"12.00\",\n  \"cuota_mensual\": \"9.33\",\n  \"estado_financiamiento\": \"VIGENTE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/financiamientos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "financiamientos",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Financiamientos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/financiamientos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "financiamientos",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pagos",
+      "item": [
+        {
+          "name": "Listar Pagos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pagos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pagos",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Pagos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": 1,\n  \"monto\": \"10.00\",\n  \"metodo_pago\": \"EFECTIVO\",\n  \"transaccion_id\": \"TX-9999\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pagos/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pagos",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Pagos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pagos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pagos",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Pagos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": 1,\n  \"monto\": \"10.00\",\n  \"metodo_pago\": \"EFECTIVO\",\n  \"transaccion_id\": \"TX-9999\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pagos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pagos",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Pagos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pagos/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "pagos",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Facturas",
+      "item": [
+        {
+          "name": "Listar Facturas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/facturas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "facturas",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Facturas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": 1,\n  \"numero_factura\": \"FACT-0001\",\n  \"total\": \"112.00\",\n  \"xml_autorizacion\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/facturas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "facturas",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Facturas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/facturas/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "facturas",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Facturas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": 1,\n  \"numero_factura\": \"FACT-0001\",\n  \"total\": \"112.00\",\n  \"xml_autorizacion\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/facturas/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "facturas",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Facturas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/facturas/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "facturas",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Garantias",
+      "item": [
+        {
+          "name": "Listar Garantias",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/garantias/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "garantias",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Garantias",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": 1,\n  \"fecha_inicio\": \"2026-06-28\",\n  \"fecha_fin\": \"2027-06-28\",\n  \"cobertura\": \"Motor y transmision\",\n  \"estado_garantia\": \"ACTIVA\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/garantias/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "garantias",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Garantias",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/garantias/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "garantias",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Garantias",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": 1,\n  \"fecha_inicio\": \"2026-06-28\",\n  \"fecha_fin\": \"2027-06-28\",\n  \"cobertura\": \"Motor y transmision\",\n  \"estado_garantia\": \"ACTIVA\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/garantias/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "garantias",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Garantias",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/garantias/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "garantias",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Seguros",
+      "item": [
+        {
+          "name": "Listar Seguros",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/seguros/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "seguros",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Seguros",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"moto\": 1,\n  \"aseguradora\": \"Seguros Pichincha\",\n  \"numero_poliza\": \"POL-9999\",\n  \"fecha_inicio\": \"2026-06-28\",\n  \"fecha_fin\": \"2027-06-28\",\n  \"costo\": \"120.00\",\n  \"estado_seguro\": \"ACTIVO\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/seguros/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "seguros",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Seguros",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/seguros/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "seguros",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Seguros",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"moto\": 1,\n  \"aseguradora\": \"Seguros Pichincha\",\n  \"numero_poliza\": \"POL-9999\",\n  \"fecha_inicio\": \"2026-06-28\",\n  \"fecha_fin\": \"2027-06-28\",\n  \"costo\": \"120.00\",\n  \"estado_seguro\": \"ACTIVO\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/seguros/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "seguros",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Seguros",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/seguros/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "seguros",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notificaciones",
+      "item": [
+        {
+          "name": "Listar Notificaciones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notificaciones/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Notificaciones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": 1,\n  \"titulo\": \"Aviso\",\n  \"mensaje\": \"Tu pedido esta en camino\",\n  \"leido\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/notificaciones/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Notificaciones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notificaciones/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Notificaciones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": 1,\n  \"titulo\": \"Aviso\",\n  \"mensaje\": \"Tu pedido esta en camino\",\n  \"leido\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/notificaciones/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Notificaciones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notificaciones/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notificaciones",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Documentos Venta",
+      "item": [
+        {
+          "name": "Listar Documentos Venta",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/documentos-venta/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documentos-venta",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Documentos Venta",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": 1,\n  \"tipo_documento\": \"CONTRATO\",\n  \"url_documento\": \"http://servidor.com/contrato1.pdf\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/documentos-venta/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documentos-venta",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Documentos Venta",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/documentos-venta/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documentos-venta",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Documentos Venta",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": 1,\n  \"tipo_documento\": \"CONTRATO\",\n  \"url_documento\": \"http://servidor.com/contrato1.pdf\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/documentos-venta/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documentos-venta",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Documentos Venta",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/documentos-venta/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documentos-venta",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Historial Estado Venta",
+      "item": [
+        {
+          "name": "Listar Historial Estado Venta",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/historial-estado-venta/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-estado-venta",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Historial Estado Venta",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": 1,\n  \"estado_anterior\": \"PENDIENTE\",\n  \"estado_nuevo\": \"COMPLETADA\",\n  \"comentarios\": \"Pago procesado\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/historial-estado-venta/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-estado-venta",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Historial Estado Venta",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/historial-estado-venta/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-estado-venta",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Historial Estado Venta",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": 1,\n  \"estado_anterior\": \"PENDIENTE\",\n  \"estado_nuevo\": \"COMPLETADA\",\n  \"comentarios\": \"Pago procesado\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/historial-estado-venta/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-estado-venta",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Historial Estado Venta",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/historial-estado-venta/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "historial-estado-venta",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Devoluciones",
+      "item": [
+        {
+          "name": "Listar Devoluciones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/devoluciones/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "devoluciones",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Crear Devoluciones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": 1,\n  \"motivo\": \"Falla de fabrica\",\n  \"monto_devuelto\": \"100.00\",\n  \"estado_devolucion\": \"APROBADO\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/devoluciones/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "devoluciones",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detalle Devoluciones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/devoluciones/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "devoluciones",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Devoluciones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venta\": 1,\n  \"motivo\": \"Falla de fabrica\",\n  \"monto_devuelto\": \"100.00\",\n  \"estado_devolucion\": \"APROBADO\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/devoluciones/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "devoluciones",
+                "1",
+                ""
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Devoluciones",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{access_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/devoluciones/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "devoluciones",
+                "1",
+                ""
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
