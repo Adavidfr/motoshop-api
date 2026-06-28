@@ -6,7 +6,7 @@ Custom permission classes based on Django Groups.
 Grupos disponibles: admin, usuario, cliente, vendedor
 """
 
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
 def _user_in_group(user, group_name: str) -> bool:
@@ -66,3 +66,19 @@ class IsAdminOrReadOnly(BasePermission):
         if request.method in ('GET', 'HEAD', 'OPTIONS'):
             return True
         return request.user.is_superuser or _user_in_group(request.user, 'admin')
+
+
+class IsStaffOrReadOnly(BasePermission):
+    """Lectura para autenticados, escritura solo para staff. (Etapa 5)"""
+
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return bool(request.user and request.user.is_authenticated)
+        return bool(request.user and request.user.is_staff)
+
+
+class IsOwnerOrStaff(BasePermission):
+    """El propietario del pedido o staff pueden acceder. (Etapa 5)"""
+
+    def has_object_permission(self, request, view, obj):
+        return obj.user == request.user or request.user.is_staff
