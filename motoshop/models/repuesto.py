@@ -9,6 +9,7 @@ class Repuesto(models.Model):
     precio_venta = models.DecimalField(max_digits=12, decimal_places=2)
     stock = models.IntegerField()
     estado = models.CharField(max_length=50)
+    imagen = models.ImageField(upload_to='repuestos/', null=True, blank=True)
     fecha_registro = models.DateTimeField(auto_now_add=True)
 
     class Meta:

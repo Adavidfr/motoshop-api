@@ -16,6 +16,7 @@ class ClientePerfil(models.Model):
     cedula           = models.CharField(max_length=20, blank=True, default='')
     telefono         = models.CharField(max_length=20, blank=True, default='')
     direccion        = models.TextField(blank=True, default='')
+    foto_perfil      = models.ImageField(upload_to='perfiles/', null=True, blank=True)
     fecha_nacimiento = models.DateField(null=True, blank=True)
 
     class Meta:

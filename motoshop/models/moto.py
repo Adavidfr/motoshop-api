@@ -23,6 +23,7 @@ class Moto(models.Model):
     precio = models.DecimalField(max_digits=12, decimal_places=2)
     stock = models.IntegerField()
     estado = models.CharField(max_length=30)
+    imagen = models.ImageField(upload_to='motos/', null=True, blank=True)
     fecha_registro = models.DateTimeField(auto_now_add=True)
 
     class Meta:

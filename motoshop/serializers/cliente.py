@@ -12,6 +12,6 @@ class ClientePerfilSerializer(serializers.ModelSerializer):
         model  = ClientePerfil
         fields = [
             'id_perfil', 'username', 'email',
-            'cedula', 'telefono', 'direccion', 'fecha_nacimiento',
+            'cedula', 'telefono', 'direccion', 'foto_perfil', 'fecha_nacimiento',
         ]
         read_only_fields = ['id_perfil', 'username', 'email']

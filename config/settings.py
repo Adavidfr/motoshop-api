@@ -98,6 +98,9 @@ SIMPLE_JWT = {
 
 CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=False, cast=bool)
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 SPECTACULAR_SETTINGS = {
     'TITLE': 'MotoShop API',
     'DESCRIPTION': 'API REST para el Sistema de Venta de Motos',
