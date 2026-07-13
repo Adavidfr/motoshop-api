@@ -26,36 +26,47 @@ def get_base_html(title, content):
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     </head>
     <body style="margin: 0; padding: 0; font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #050505; color: #d4d4d4; -webkit-font-smoothing: antialiased;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 40px auto; background-color: #0d0d0d; border-radius: 16px; border: 1px solid #1f1f1f; box-shadow: 0 20px 40px rgba(229, 9, 20, 0.1); overflow: hidden;">
-            <!-- Header -->
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 40px auto; background-image: url('https://motoshop-api.uaeftt-ute.site/static/images/aurarider_email_background.png'); background-size: cover; background-position: center; border-radius: 16px; border: 1px solid #1f1f1f; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.85); overflow: hidden;">
             <tr>
-                <td style="padding: 0; text-align: center; border-bottom: 1px solid #1f1f1f; line-height: 0;">
-                    <!-- Banner de Ultra-Lujo Oficial AuraRider (Con fondo de moto translúcido) -->
-                    <img src="https://motoshop-api.uaeftt-ute.site/static/images/aurarider_email_banner.png" alt="AuraRider" style="width: 100%; height: auto; display: block; max-width: 100%;">
-                </td>
-            </tr>
-            
-            <!-- Body -->
-            <tr>
-                <td style="padding: 40px 50px; background-color: #0d0d0d;">
-                    <h2 style="color: #ffffff; margin-top: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.3; margin-bottom: 25px; text-align: left; text-shadow: 0 2px 10px rgba(0,0,0,0.5); border-left: 4px solid #e50914; padding-left: 15px;">
-                        {title}
-                    </h2>
-                    <div style="font-size: 16px; line-height: 1.8; color: #b3b3b3; font-weight: 400;">
-                        {content}
-                    </div>
-                </td>
-            </tr>
-            
-            <!-- Footer -->
-            <tr>
-                <td style="background-color: #060606; padding: 35px 50px; text-align: center; border-top: 1px solid #161616;">
-                    <p style="margin: 0; color: #525252; font-size: 11px; line-height: 1.5; font-weight: 400;">
-                        Has recibido este correo electrónico porque eres miembro registrado de AuraRider MotoShop.
-                    </p>
-                    <p style="margin: 15px 0 0 0; color: #404040; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;">
-                        © 2026 AuraRider MotoShop. Todos los derechos reservados.
-                    </p>
+                <!-- Capa negra translúcida (92%) para asegurar legibilidad impecable sobre la imagen de fondo -->
+                <td style="background-color: rgba(13, 13, 13, 0.92); padding: 0;">
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <!-- Header -->
+                        <tr>
+                            <td style="padding: 50px 40px 30px 40px; text-align: center; border-bottom: 1px solid #1f1f1f;">
+                                <!-- Logotipo Oficial AuraRider (Proporcionado por el usuario) -->
+                                <img src="https://motoshop-api.uaeftt-ute.site/static/images/aurarider_para_pantallas.png" alt="AuraRider Logo" style="width: auto; height: 110px; margin: 0 auto 15px auto; display: block; max-width: 100%; object-fit: contain;">
+                                <div style="width: 50px; height: 2px; background-color: #e50914; margin: 15px auto;"></div>
+                                <p style="color: #a3a3a3; margin: 0; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px;">
+                                    Diseño <span style="color: #e50914;">•</span> Potencia <span style="color: #e50914;">•</span> Control
+                                </p>
+                            </td>
+                        </tr>
+                        
+                        <!-- Body -->
+                        <tr>
+                            <td style="padding: 40px 50px;">
+                                <h2 style="color: #ffffff; margin-top: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.3; margin-bottom: 25px; text-align: left; text-shadow: 0 2px 10px rgba(0,0,0,0.5); border-left: 4px solid #e50914; padding-left: 15px;">
+                                    {title}
+                                </h2>
+                                <div style="font-size: 16px; line-height: 1.8; color: #b3b3b3; font-weight: 400;">
+                                    {content}
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <!-- Footer -->
+                        <tr>
+                            <td style="background-color: #060606; padding: 35px 50px; text-align: center; border-top: 1px solid #161616;">
+                                <p style="margin: 0; color: #525252; font-size: 11px; line-height: 1.5; font-weight: 400;">
+                                    Has recibido este correo electrónico porque eres miembro registrado de AuraRider MotoShop.
+                                </p>
+                                <p style="margin: 15px 0 0 0; color: #404040; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;">
+                                    © 2026 AuraRider MotoShop. Todos los derechos reservados.
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>
