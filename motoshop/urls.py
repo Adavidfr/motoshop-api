@@ -8,7 +8,12 @@ from motoshop.views.proveedor import ProveedorViewSet
 from motoshop.views.repuesto_mantenimiento import RepuestoMantenimientoViewSet
 from motoshop.views.servicio import ServicioViewSet
 from motoshop.views.compra import CompraViewSet
-from motoshop.views.auth import RegisterView, LogoutView
+from motoshop.views.auth import (
+    RegisterView,
+    LogoutView,
+    PasswordResetRequestView,
+    PasswordResetConfirmView,
+)
 from motoshop.views.user import UserViewSet
 from motoshop.views.cliente import ClientePerfilView, ClientePerfilAdminListView
 from motoshop.views.carrito_compras import CarritoComprasViewSet
@@ -70,6 +75,10 @@ urlpatterns = [
     path('auth/token/refresh/', TokenRefreshView.as_view()),
     path('auth/token/verify/',  TokenVerifyView.as_view()),
     path('auth/logout/',        LogoutView.as_view()),
+    
+    # Password Reset
+    path('auth/password-reset/',         PasswordResetRequestView.as_view()),
+    path('auth/password-reset-confirm/', PasswordResetConfirmView.as_view()),
 
     # Perfil del cliente (APIView, no ViewSet)
     path('clientes/perfil/',    ClientePerfilView.as_view()),
