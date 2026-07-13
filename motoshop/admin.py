@@ -342,3 +342,42 @@ class DevolucionAdmin(admin.ModelAdmin):
     search_fields = ['motivo']
     ordering      = ['-fecha_solicitud']
 
+
+# ------------------------------------------------------------------ #
+#  Catalogo e Inventario Admin (Andrés)                                #
+# ------------------------------------------------------------------ #
+
+from motoshop.models.marca import Marca
+from motoshop.models.categoria_moto import CategoriaMoto
+from motoshop.models.moto import Moto
+from motoshop.models.repuesto import Repuesto
+from motoshop.models.movimiento_inventario import MovimientoInventario
+
+@admin.register(Marca)
+class MarcaAdmin(admin.ModelAdmin):
+    list_display  = ['id_marca', 'nombre', 'estado']
+    search_fields = ['nombre']
+
+@admin.register(CategoriaMoto)
+class CategoriaMotoAdmin(admin.ModelAdmin):
+    list_display  = ['id_categoria', 'nombre', 'estado']
+    search_fields = ['nombre']
+
+@admin.register(Moto)
+class MotoAdmin(admin.ModelAdmin):
+    list_display  = ['id_moto', 'modelo', 'marca', 'categoria', 'precio', 'stock', 'estado']
+    list_filter   = ['estado', 'marca', 'categoria']
+    search_fields = ['modelo']
+
+@admin.register(Repuesto)
+class RepuestoAdmin(admin.ModelAdmin):
+    list_display  = ['id_repuesto', 'nombre', 'sku', 'precio_venta', 'stock', 'estado']
+    list_filter   = ['estado']
+    search_fields = ['nombre', 'sku']
+
+@admin.register(MovimientoInventario)
+class MovimientoInventarioAdmin(admin.ModelAdmin):
+    list_display  = ['id_movimiento', 'tipo_movimiento', 'cantidad', 'fecha_movimiento']
+    list_filter   = ['tipo_movimiento']
+
+
