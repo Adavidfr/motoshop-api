@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 def get_base_html(title, content):
     """
     Plantilla base HTML para todos los correos.
-    Estilo oscuro Premium basado en la interfaz web de AuraRider.
+    Estilo oscuro Premium basado en la interfaz web de AuraRider (Monocromático Negro/Blanco).
     """
     return f"""
     <!DOCTYPE html>
@@ -19,35 +19,32 @@ def get_base_html(title, content):
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #0f0f0f; color: #e5e5e5;">
-        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #151515; margin: 40px auto; border-radius: 12px; overflow: hidden; border: 1px solid #333333; box-shadow: 0 4px 20px rgba(229, 9, 20, 0.15);">
+    <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #0a0a0a; color: #e5e5e5;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #121212; margin: 40px auto; border-radius: 12px; overflow: hidden; border: 1px solid #222222; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);">
             <!-- Header -->
             <tr>
                 <td style="padding: 40px 20px 20px 20px; text-align: center;">
-                    <!-- Simulando el logo circular blanco con texto rojo si no hay imagen -->
-                    <div style="width: 100px; height: 100px; background-color: #ffffff; border-radius: 50%; margin: 0 auto 15px auto; display: inline-block; border: 2px solid #e50914;">
-                        <h2 style="color: #e50914; font-size: 14px; font-weight: 900; line-height: 100px; margin: 0; letter-spacing: 1px;">AURARIDER</h2>
-                    </div>
-                    <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 700;">AuraRider</h1>
-                    <p style="color: #888888; margin: 5px 0 0 0; font-size: 14px; font-weight: 400;">Diseño, potencia y control en tus manos</p>
+                    <!-- Logotipo Oficial AuraRider -->
+                    <img src="https://motoshop-api.uaeftt-ute.site/static/images/aurarider_para_pantallas.png" alt="AuraRider" style="width: auto; height: 90px; margin: 0 auto 15px auto; display: block; max-width: 100%; object-fit: contain;">
+                    <p style="color: #888888; margin: 5px 0 0 0; font-size: 13px; font-weight: 400; text-transform: uppercase; letter-spacing: 2px;">Diseño, potencia y control en tus manos</p>
                 </td>
             </tr>
             
             <!-- Body -->
             <tr>
                 <td style="padding: 30px 40px;">
-                    <h2 style="color: #ffffff; margin-top: 0; font-size: 22px; border-bottom: 1px solid #333333; padding-bottom: 15px;">{title}</h2>
+                    <h2 style="color: #ffffff; margin-top: 0; font-size: 22px; border-bottom: 1px solid #222222; padding-bottom: 15px; font-weight: 600;">{title}</h2>
                     {content}
                 </td>
             </tr>
             
             <!-- Footer -->
             <tr>
-                <td style="background-color: #0a0a0a; padding: 25px 40px; text-align: center; border-top: 1px solid #222222;">
-                    <p style="margin: 0; color: #777777; font-size: 13px;">
+                <td style="background-color: #070707; padding: 25px 40px; text-align: center; border-top: 1px solid #1a1a1a;">
+                    <p style="margin: 0; color: #666666; font-size: 12px;">
                         Has recibido este correo porque estás registrado en AuraRider MotoShop.
                     </p>
-                    <p style="margin: 10px 0 0 0; color: #555555; font-size: 12px;">
+                    <p style="margin: 8px 0 0 0; color: #444444; font-size: 11px;">
                         © 2026 AuraRider MotoShop. Todos los derechos reservados.
                     </p>
                 </td>
@@ -72,7 +69,7 @@ def send_welcome_email(user):
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">¡Gracias por unirte a la familia AuraRider MotoShop! Estamos muy emocionados de tenerte con nosotros.</p>
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">Desde ahora podrás explorar nuestro catálogo, gestionar tus servicios de mantenimiento, comprar repuestos y mucho más, todo desde la palma de tu mano.</p>
         <div style="text-align: center; margin: 40px 0;">
-            <a href="{settings.FRONTEND_URL}" style="background-color: #d30000; color: #ffffff; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 15px rgba(211, 0, 0, 0.4);">Iniciar Sesión</a>
+            <a href="{settings.FRONTEND_URL}" style="background-color: #ffffff; color: #000000; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);">Iniciar Sesión</a>
         </div>
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">Saludos,<br>El equipo de <strong style="color: #ffffff;">AuraRider</strong></p>
     """
@@ -108,13 +105,13 @@ def send_password_reset_email(user):
     html_body = f"""
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">Hola <strong style="color: #ffffff;">{user.username}</strong>,</p>
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">Hemos recibido una solicitud para restablecer la contraseña asociada a esta cuenta.</p>
-        <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">Para crear una nueva contraseña, por favor haz clic en el siguiente botón rojo:</p>
+        <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">Para crear una nueva contraseña, por favor haz clic en el siguiente botón:</p>
         <div style="text-align: center; margin: 40px 0;">
-            <a href="{reset_url}" style="background-color: #d30000; color: #ffffff; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 15px rgba(211, 0, 0, 0.4);">Restablecer Contraseña</a>
+            <a href="{reset_url}" style="background-color: #ffffff; color: #000000; text-decoration: none; padding: 14px 30px; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block; box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);">Restablecer Contraseña</a>
         </div>
-        <p style="font-size: 14px; line-height: 1.6; color: #888888; background-color: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #333333;">
+        <p style="font-size: 14px; line-height: 1.6; color: #888888; background-color: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid #222222;">
             Si el botón no funciona, copia y pega el siguiente enlace en tu navegador:<br>
-            <a href="{reset_url}" style="color: #d30000; word-break: break-all;">{reset_url}</a>
+            <a href="{reset_url}" style="color: #ffffff; word-break: break-all;">{reset_url}</a>
         </p>
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">Si no realizaste esta solicitud, puedes ignorar este correo de forma segura. Tu contraseña actual no cambiará.</p>
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">Saludos,<br>El equipo de <strong style="color: #ffffff;">AuraRider</strong></p>
@@ -141,11 +138,11 @@ def send_notification_email(user, title, message):
     html_body = f"""
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">Hola <strong style="color: #ffffff;">{user.username}</strong>,</p>
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">Tienes una nueva notificación de AuraRider MotoShop:</p>
-        <div style="margin: 30px 0; padding: 20px; border-left: 4px solid #d30000; background-color: #1a1a1a; border-radius: 0 8px 8px 0;">
+        <div style="margin: 30px 0; padding: 20px; border-left: 4px solid #ffffff; background-color: #1a1a1a; border-radius: 0 8px 8px 0;">
             <p style="margin: 0; font-size: 16px; color: #ffffff; line-height: 1.6;">{message.replace(chr(10), '<br>')}</p>
         </div>
         <div style="text-align: center; margin: 40px 0;">
-            <a href="{settings.FRONTEND_URL}" style="background-color: #d30000; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; font-size: 15px; display: inline-block;">Ir a la plataforma</a>
+            <a href="{settings.FRONTEND_URL}" style="background-color: #ffffff; color: #000000; text-decoration: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; font-size: 15px; display: inline-block; box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);">Ir a la plataforma</a>
         </div>
     """
     
@@ -179,11 +176,11 @@ def send_mass_notification_emails(users, title, message):
             # Contenido HTML
             html_body = f"""
                 <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">Hola <strong style="color: #ffffff;">{user.username}</strong>,</p>
-                <div style="margin: 30px 0; padding: 20px; border-left: 4px solid #d30000; background-color: #1a1a1a; border-radius: 0 8px 8px 0;">
+                <div style="margin: 30px 0; padding: 20px; border-left: 4px solid #ffffff; background-color: #1a1a1a; border-radius: 0 8px 8px 0;">
                     <p style="margin: 0; font-size: 16px; color: #ffffff; line-height: 1.6;">{message.replace(chr(10), '<br>')}</p>
                 </div>
                 <div style="text-align: center; margin: 40px 0;">
-                    <a href="{settings.FRONTEND_URL}" style="background-color: #d30000; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; font-size: 15px; display: inline-block;">Visitar AuraRider MotoShop</a>
+                    <a href="{settings.FRONTEND_URL}" style="background-color: #ffffff; color: #000000; text-decoration: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; font-size: 15px; display: inline-block; box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);">Visitar AuraRider MotoShop</a>
                 </div>
             """
             html_content = get_base_html(title, html_body)
