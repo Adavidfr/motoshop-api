@@ -29,13 +29,9 @@ def get_base_html(title, content):
         <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 40px auto; background-color: #0d0d0d; border-radius: 16px; border: 1px solid #1f1f1f; box-shadow: 0 20px 40px rgba(229, 9, 20, 0.1); overflow: hidden;">
             <!-- Header -->
             <tr>
-                <td style="padding: 50px 40px 30px 40px; text-align: center; background: linear-gradient(180deg, #111111 0%, #0d0d0d 100%); border-bottom: 1px solid #1f1f1f;">
-                    <!-- Logotipo Oficial AuraRider (Rediseñado y Ampliado a 125px para mayor impacto) -->
-                    <img src="https://motoshop-api.uaeftt-ute.site/static/images/aurarider_para_pantallas.png" alt="AuraRider Logo" style="width: auto; height: 125px; margin: 0 auto 15px auto; display: block; max-width: 100%; object-fit: contain;">
-                    <div style="width: 50px; height: 2px; background-color: #e50914; margin: 15px auto;"></div>
-                    <p style="color: #a3a3a3; margin: 0; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px;">
-                        Diseño <span style="color: #e50914;">•</span> Potencia <span style="color: #e50914;">•</span> Control
-                    </p>
+                <td style="padding: 0; text-align: center; border-bottom: 1px solid #1f1f1f; line-height: 0;">
+                    <!-- Banner de Ultra-Lujo Oficial AuraRider (Con fondo de moto translúcido) -->
+                    <img src="https://motoshop-api.uaeftt-ute.site/static/images/aurarider_email_banner.png" alt="AuraRider" style="width: 100%; height: auto; display: block; max-width: 100%;">
                 </td>
             </tr>
             
