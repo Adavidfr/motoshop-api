@@ -35,11 +35,7 @@ def get_base_html(title, content):
                         <tr>
                             <td style="padding: 50px 40px 30px 40px; text-align: center; border-bottom: 1px solid #1f1f1f;">
                                 <!-- Logotipo Oficial AuraRider (Proporcionado por el usuario) -->
-                                <img src="https://motoshop-api.uaeftt-ute.site/static/images/aurarider_para_pantallas.png" alt="AuraRider Logo" style="width: auto; height: 110px; margin: 0 auto 15px auto; display: block; max-width: 100%; object-fit: contain;">
-                                <div style="width: 50px; height: 2px; background-color: #e50914; margin: 15px auto;"></div>
-                                <p style="color: #a3a3a3; margin: 0; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px;">
-                                    Diseño <span style="color: #e50914;">•</span> Potencia <span style="color: #e50914;">•</span> Control
-                                </p>
+                                <img src="https://motoshop-api.uaeftt-ute.site/static/images/aurarider_para_pantallas.png" alt="AuraRider Logo" style="width: 250px; height: auto; margin: 0 auto; display: block; max-width: 100%; object-fit: contain;">
                             </td>
                         </tr>
                         
