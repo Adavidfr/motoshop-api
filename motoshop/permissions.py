@@ -57,15 +57,15 @@ class IsAdminOrVendedor(BasePermission):
 
 class IsAdminOrReadOnly(BasePermission):
     """
-    Lectura libre para autenticados, escritura solo para admin.
+    Lectura libre para todos, escritura solo para admin.
     """
 
     def has_permission(self, request, view):
-        if not request.user.is_authenticated:
-            return False
-        if request.method in ('GET', 'HEAD', 'OPTIONS'):
+        if request.method in SAFE_METHODS:
             return True
-        return request.user.is_superuser or _user_in_group(request.user, 'admin')
+        return request.user.is_authenticated and (
+            request.user.is_superuser or _user_in_group(request.user, 'admin')
+        )
 
 
 class IsStaffOrReadOnly(BasePermission):
