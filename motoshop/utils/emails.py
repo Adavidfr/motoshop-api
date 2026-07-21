@@ -223,14 +223,14 @@ def send_newsletter_invitation(email):
     """
     subject = '¡Únete a AuraRider MotoShop y recibe ofertas exclusivas!'
     
-    text_content = 'Gracias por suscribirte al boletín de AuraRider MotoShop. ¡Regístrate ahora para acceder a las mejores motos, accesorios y servicios exclusivos!\n\nRegístrate aquí: ' + settings.FRONTEND_URL + 'register'
+    text_content = 'Gracias por suscribirte al boletín de AuraRider MotoShop. ¡Regístrate ahora para acceder a las mejores motos, accesorios y servicios exclusivos!\n\nRegístrate aquí: https://aura-rider.uaeftt-ute.site/register'
     
     html_body = f"""
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">¡Hola!</p>
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">Gracias por interesarte en <strong style="color: #ffffff; font-weight: 700;">AuraRider MotoShop</strong>.</p>
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">Te invitamos a formar parte de nuestra comunidad exclusiva. Al crear tu cuenta podrás descubrir nuestro catálogo premium, acceder a promociones especiales, reservar servicios de mantenimiento y adquirir repuestos originales de manera rápida y segura.</p>
         <div style="text-align: center; margin: 45px 0;">
-            <a href="{settings.FRONTEND_URL}register" style="background-color: #e50914; color: #ffffff; text-decoration: none; padding: 16px 36px; border-radius: 8px; font-weight: 800; font-size: 16px; display: inline-block; box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4); text-transform: uppercase; letter-spacing: 1px;">Crear Mi Cuenta Ahora</a>
+            <a href="https://aura-rider.uaeftt-ute.site/register" style="background-color: #e50914; color: #ffffff; text-decoration: none; padding: 16px 36px; border-radius: 8px; font-weight: 800; font-size: 16px; display: inline-block; box-shadow: 0 6px 20px rgba(229, 9, 20, 0.4); text-transform: uppercase; letter-spacing: 1px;">Crear Mi Cuenta Ahora</a>
         </div>
         <p style="font-size: 16px; line-height: 1.6; color: #cccccc;">¡Prepárate para vivir la experiencia al máximo nivel!<br><br>Saludos,<br>El equipo de <strong style="color: #ffffff;">AuraRider</strong></p>
     """
