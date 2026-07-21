@@ -23,7 +23,7 @@ class CarritoComprasSerializer(serializers.ModelSerializer):
         read_only_fields = ['id_carrito', 'username_cliente', 'id_usuario_cliente', 'fecha_creacion']
 
     def get_num_items(self, obj):
-        return obj.items.count()
+        return sum(item.cantidad for item in obj.items.all())
 
     def get_total(self, obj):
         return float(obj.calcular_total())

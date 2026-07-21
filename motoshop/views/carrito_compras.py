@@ -120,7 +120,9 @@ class CarritoComprasViewSet(viewsets.ModelViewSet):
                 precio_unitario = data['precio_unitario'],
             )
 
-        return Response(CarritoComprasSerializer(carrito).data)
+        # Re-obtener el carrito para limpiar la caché de prefetch y reflejar cambios
+        carrito_actualizado = self.get_queryset().get(pk=carrito.pk)
+        return Response(CarritoComprasSerializer(carrito_actualizado).data)
 
     # ------------------------------------------------------------------ #
     #  Action: quitar ítem                                                 #
@@ -137,7 +139,8 @@ class CarritoComprasViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND,
             )
         item.delete()
-        return Response(CarritoComprasSerializer(carrito).data)
+        carrito_actualizado = self.get_queryset().get(pk=carrito.pk)
+        return Response(CarritoComprasSerializer(carrito_actualizado).data)
 
     # ------------------------------------------------------------------ #
     #  Action: vaciar carrito                                              #
@@ -152,4 +155,5 @@ class CarritoComprasViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         carrito.items.all().delete()
-        return Response(CarritoComprasSerializer(carrito).data)
+        carrito_actualizado = self.get_queryset().get(pk=carrito.pk)
+        return Response(CarritoComprasSerializer(carrito_actualizado).data)
