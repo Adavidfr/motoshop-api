@@ -14,6 +14,7 @@ from motoshop.views.auth import (
     PasswordResetRequestView,
     PasswordResetConfirmView,
 )
+from motoshop.views.newsletter import NewsletterSubscribeView
 from motoshop.views.user import UserViewSet
 from motoshop.views.cliente import ClientePerfilView, ClientePerfilAdminListView
 from motoshop.views.carrito_compras import CarritoComprasViewSet
@@ -79,6 +80,9 @@ urlpatterns = [
     # Password Reset
     path('auth/password-reset/',         PasswordResetRequestView.as_view()),
     path('auth/password-reset-confirm/', PasswordResetConfirmView.as_view()),
+    
+    # Newsletter
+    path('newsletter/subscribe/',        NewsletterSubscribeView.as_view()),
 
     # Perfil del cliente (APIView, no ViewSet)
     path('clientes/perfil/',    ClientePerfilView.as_view()),
