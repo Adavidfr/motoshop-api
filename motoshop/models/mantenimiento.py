@@ -52,6 +52,8 @@ class Mantenimiento(models.Model):
 
     fecha_registro = models.DateTimeField(auto_now_add=True)
 
+    repuestos_descontados = models.BooleanField(default=False)
+
     class Meta:
         db_table = "mantenimientos"
         verbose_name = "Mantenimiento"

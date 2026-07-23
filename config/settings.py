@@ -97,6 +97,11 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOW_ALL_ORIGINS = config('CORS_ALLOW_ALL_ORIGINS', default=False, cast=bool)
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default='http://localhost:5173,http://127.0.0.1:5173',
+    cast=Csv(),
+)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -119,3 +124,6 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='webmaster@localhost')
 
 # Frontend URL
 FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:52467/#/')
+# Facturación — Venta.total_venta incluye IVA; tasa configurable vía entorno.
+from decimal import Decimal
+MOTOSHOP_IVA_RATE = Decimal(config('MOTOSHOP_IVA_RATE', default='0.12'))

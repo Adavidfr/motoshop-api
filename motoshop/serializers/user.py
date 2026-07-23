@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 
-from motoshop.apps import ROLES
+from motoshop.serializers.auth import get_user_role
 
 
 class RegisterSerializer(serializers.Serializer):
@@ -9,7 +9,6 @@ class RegisterSerializer(serializers.Serializer):
     email     = serializers.EmailField()
     password  = serializers.CharField(min_length=8, write_only=True)
     password2 = serializers.CharField(write_only=True)
-    role      = serializers.ChoiceField(choices=ROLES, default='usuario')
 
     def validate_username(self, value):
         if User.objects.filter(username=value).exists():
@@ -22,17 +21,21 @@ class RegisterSerializer(serializers.Serializer):
         return value
 
     def validate(self, data):
+        if self.initial_data.get('role') is not None:
+            raise serializers.ValidationError(
+                {'role': 'No se permite seleccionar un rol durante el registro público.'}
+            )
         if data['password'] != data['password2']:
             raise serializers.ValidationError({'password2': 'Passwords do not match.'})
         return data
 
     def create(self, validated_data):
-        role = validated_data.pop('role', 'usuario')
         validated_data.pop('password2')
-        user = User.objects.create_user(**validated_data)
-        group, _ = Group.objects.get_or_create(name=role)
-        user.groups.add(group)
-        return user
+        return User.objects.create_user(
+            is_staff=False,
+            is_superuser=False,
+            **validated_data,
+        )
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -52,8 +55,7 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'date_joined']
 
     def get_role(self, obj):
-        group = obj.groups.first()
-        return group.name if group else 'usuario'
+        return get_user_role(obj)
 
     def get_num_orders(self, obj):
         return obj.orders.count()
@@ -68,8 +70,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'role']
 
     def get_role(self, obj):
-        group = obj.groups.first()
-        return group.name if group else 'usuario'
+        return get_user_role(obj)
 
     def validate_email(self, value):
         request = self.context.get('request')

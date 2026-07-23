@@ -3,9 +3,10 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 def get_user_role(user) -> str:
-    """Devuelve el nombre del primer grupo del usuario o 'usuario' por defecto."""
-    group = user.groups.first()
-    return group.name if group else 'usuario'
+    """Devuelve el rol funcional derivado de privilegios administrativos."""
+    if user.is_superuser or user.is_staff:
+        return 'administrador'
+    return 'cliente'
 
 
 class CustomTokenSerializer(TokenObtainPairSerializer):

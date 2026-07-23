@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 
 from motoshop.serializers.user import (
     UserSerializer,
@@ -12,7 +12,9 @@ from motoshop.serializers.user import (
     ChangePasswordSerializer,
 )
 from motoshop.pagination import StandardPagination
-from motoshop.apps import ROLES
+
+
+FUNCTIONAL_ROLES = ('administrador', 'cliente')
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -29,8 +31,10 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         qs = super().get_queryset()
         role = self.request.query_params.get('role')
-        if role:
-            qs = qs.filter(groups__name=role)
+        if role == 'administrador':
+            qs = qs.filter(is_staff=True)
+        elif role == 'cliente':
+            qs = qs.filter(is_staff=False)
         return qs
 
     @action(
@@ -91,16 +95,15 @@ class UserViewSet(viewsets.ModelViewSet):
     )
     def stats(self, request):
         qs = User.objects.all()
-        role_counts = {
-            role: qs.filter(groups__name=role).count()
-            for role in ROLES
-        }
         return Response({
             'total':    qs.count(),
             'active':   qs.filter(is_active=True).count(),
             'inactive': qs.filter(is_active=False).count(),
             'staff':    qs.filter(is_staff=True).count(),
-            'by_role':  role_counts,
+            'by_role':  {
+                'administrador': qs.filter(is_staff=True).count(),
+                'cliente':       qs.filter(is_staff=False).count(),
+            },
         })
 
     @action(
@@ -110,15 +113,14 @@ class UserViewSet(viewsets.ModelViewSet):
         url_path='set-role',
     )
     def set_role(self, request, pk=None):
-        """Cambia el rol (grupo) de un usuario. Solo admins."""
-        user = self.get_object()
-        new_role = request.data.get('role')
-        if new_role not in ROLES:
-            return Response(
-                {'error': f'Rol inválido. Opciones: {", ".join(ROLES)}'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-        user.groups.clear()
-        group, _ = Group.objects.get_or_create(name=new_role)
-        user.groups.add(group)
-        return Response({'message': f'Rol actualizado a "{new_role}".', 'role': new_role})
+        """Deprecado: los roles funcionales se derivan de is_staff."""
+        return Response(
+            {
+                'error': (
+                    'Este endpoint está deprecado. '
+                    'Use is_staff para gestionar privilegios administrativos.'
+                ),
+                'functional_roles': list(FUNCTIONAL_ROLES),
+            },
+            status=status.HTTP_410_GONE,
+        )

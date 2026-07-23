@@ -1,6 +1,7 @@
 # motoshop/models/garantia.py
 from django.db import models
 from .venta import Venta
+from .moto import Moto
 
 
 class Garantia(models.Model):
@@ -19,7 +20,12 @@ class Garantia(models.Model):
         related_name='garantias',
         db_column='id_venta',
     )
-    id_moto          = models.IntegerField()
+    id_moto          = models.ForeignKey(
+        Moto,
+        on_delete=models.PROTECT,
+        related_name='garantias',
+        db_column='id_moto',
+    )
     meses_garantia   = models.IntegerField()
     fecha_inicio     = models.DateField()
     fecha_fin        = models.DateField()

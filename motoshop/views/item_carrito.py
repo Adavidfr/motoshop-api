@@ -1,6 +1,7 @@
 # motoshop/views/item_carrito.py
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.filters import OrderingFilter
@@ -10,26 +11,18 @@ from motoshop.models import ItemCarrito
 from motoshop.serializers.item_carrito import ItemCarritoSerializer
 from motoshop.pagination import StandardPagination
 from motoshop.filters    import ItemCarritoFilter
+from motoshop.permissions import IsClientWriteOrStaffReadOnly
 
 
 class ItemsCarritoViewSet(viewsets.ModelViewSet):
     """
     ViewSet CRUD de items_carrito (tabla: items_carrito).
 
-    Endpoints:
-      GET    /items-carrito/              → listar (filtrar por id_carrito)
-      POST   /items-carrito/              → crear ítem directamente
-      GET    /items-carrito/<id_item>/    → detalle
-      PATCH  /items-carrito/<id_item>/    → editar cantidad / precio_unitario
-      DELETE /items-carrito/<id_item>/    → eliminar
-
-    Filtros: ?id_carrito=1  ?id_moto=2  ?id_repuesto=3
-
-    Acción custom:
-      GET  /items-carrito/stats/  → estadísticas (solo staff)
+    Clientes: CRUD sobre ítems de sus propios carritos.
+    Administradores: solo lectura.
     """
     serializer_class   = ItemCarritoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsClientWriteOrStaffReadOnly]
     pagination_class   = StandardPagination
     filter_backends    = [DjangoFilterBackend, OrderingFilter]
     filterset_class    = ItemCarritoFilter
@@ -40,14 +33,28 @@ class ItemsCarritoViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_staff:
             return ItemCarrito.objects.select_related('id_carrito__id_usuario_cliente').all()
-        # El cliente solo ve ítems de sus propios carritos
         return ItemCarrito.objects.filter(
             id_carrito__id_usuario_cliente=self.request.user
         ).select_related('id_carrito')
 
-    # ------------------------------------------------------------------ #
-    #  Action: estadísticas (solo staff)                                   #
-    # ------------------------------------------------------------------ #
+    def perform_create(self, serializer):
+        carrito = serializer.validated_data['id_carrito']
+        if carrito.id_usuario_cliente_id != self.request.user.id:
+            raise PermissionDenied('No tienes permiso para modificar este carrito.')
+        serializer.save()
+
+    def perform_update(self, serializer):
+        carrito = serializer.instance.id_carrito
+        if carrito.id_usuario_cliente_id != self.request.user.id:
+            raise PermissionDenied('No tienes permiso para modificar este carrito.')
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        carrito = instance.id_carrito
+        if carrito.id_usuario_cliente_id != self.request.user.id:
+            raise PermissionDenied('No tienes permiso para modificar este carrito.')
+        instance.delete()
+
     @action(detail=False, methods=['get'], permission_classes=[IsAdminUser], url_path='stats')
     def stats(self, request):
         """Resumen de ítems del carrito. Solo staff."""

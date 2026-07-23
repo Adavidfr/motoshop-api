@@ -1,0 +1,7171 @@
+openapi: 3.0.3
+info:
+  title: MotoShop API
+  version: 1.0.0
+  description: API REST para el Sistema de Venta de Motos
+paths:
+  /api/auth/login/:
+    post:
+      operationId: auth_login_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomToken'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CustomToken'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomToken'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomToken'
+          description: ''
+  /api/auth/logout/:
+    post:
+      operationId: auth_logout_create
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/auth/password-reset/:
+    post:
+      operationId: auth_password_reset_create
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/auth/password-reset-confirm/:
+    post:
+      operationId: auth_password_reset_confirm_create
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/auth/register/:
+    post:
+      operationId: auth_register_create
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/auth/token/refresh/:
+    post:
+      operationId: auth_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/auth/token/verify/:
+    post:
+      operationId: auth_token_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenVerify'
+          description: ''
+  /api/carritos/:
+    get:
+      operationId: carritos_list
+      description: |-
+        ViewSet CRUD de carrito_compras (tabla: carrito_compras).
+
+
+
+        Clientes: CRUD de carrito propio, add-item, vaciar y remove-item.
+
+        Administradores: solo lectura (consulta/revisión).
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - carritos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCarritoComprasList'
+          description: ''
+    post:
+      operationId: carritos_create
+      description: |-
+        ViewSet CRUD de carrito_compras (tabla: carrito_compras).
+
+
+
+        Clientes: CRUD de carrito propio, add-item, vaciar y remove-item.
+
+        Administradores: solo lectura (consulta/revisión).
+      tags:
+      - carritos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarritoCompras'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CarritoCompras'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CarritoCompras'
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarritoCompras'
+          description: ''
+  /api/carritos/{id}/:
+    get:
+      operationId: carritos_retrieve
+      description: |-
+        ViewSet CRUD de carrito_compras (tabla: carrito_compras).
+
+
+
+        Clientes: CRUD de carrito propio, add-item, vaciar y remove-item.
+
+        Administradores: solo lectura (consulta/revisión).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - carritos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarritoCompras'
+          description: ''
+    patch:
+      operationId: carritos_partial_update
+      description: |-
+        ViewSet CRUD de carrito_compras (tabla: carrito_compras).
+
+
+
+        Clientes: CRUD de carrito propio, add-item, vaciar y remove-item.
+
+        Administradores: solo lectura (consulta/revisión).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - carritos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCarritoCompras'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCarritoCompras'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCarritoCompras'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarritoCompras'
+          description: ''
+    delete:
+      operationId: carritos_destroy
+      description: |-
+        ViewSet CRUD de carrito_compras (tabla: carrito_compras).
+
+
+
+        Clientes: CRUD de carrito propio, add-item, vaciar y remove-item.
+
+        Administradores: solo lectura (consulta/revisión).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - carritos
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/carritos/{id}/add-item/:
+    post:
+      operationId: carritos_add_item_create
+      description: |-
+        ViewSet CRUD de carrito_compras (tabla: carrito_compras).
+
+
+
+        Clientes: CRUD de carrito propio, add-item, vaciar y remove-item.
+
+        Administradores: solo lectura (consulta/revisión).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - carritos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarritoCompras'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CarritoCompras'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CarritoCompras'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarritoCompras'
+          description: ''
+  /api/carritos/{id}/remove-item/{item_id}/:
+    delete:
+      operationId: carritos_remove_item_destroy
+      description: |-
+        ViewSet CRUD de carrito_compras (tabla: carrito_compras).
+
+
+
+        Clientes: CRUD de carrito propio, add-item, vaciar y remove-item.
+
+        Administradores: solo lectura (consulta/revisión).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: item_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - carritos
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/carritos/{id}/vaciar/:
+    post:
+      operationId: carritos_vaciar_create
+      description: |-
+        ViewSet CRUD de carrito_compras (tabla: carrito_compras).
+
+
+
+        Clientes: CRUD de carrito propio, add-item, vaciar y remove-item.
+
+        Administradores: solo lectura (consulta/revisión).
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - carritos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarritoCompras'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CarritoCompras'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CarritoCompras'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarritoCompras'
+          description: ''
+  /api/carritos/activo/:
+    get:
+      operationId: carritos_activo_retrieve
+      description: Devuelve el carrito activo del usuario autenticado.
+      tags:
+      - carritos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarritoCompras'
+          description: ''
+  /api/categorias-moto/:
+    get:
+      operationId: categorias_moto_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - categorias-moto
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCategoriaMotoList'
+          description: ''
+    post:
+      operationId: categorias_moto_create
+      tags:
+      - categorias-moto
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoriaMoto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CategoriaMoto'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CategoriaMoto'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaMoto'
+          description: ''
+  /api/categorias-moto/{id_categoria}/:
+    get:
+      operationId: categorias_moto_retrieve
+      parameters:
+      - in: path
+        name: id_categoria
+        schema:
+          type: integer
+        description: A unique integer value identifying this Categoría de Moto.
+        required: true
+      tags:
+      - categorias-moto
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaMoto'
+          description: ''
+    put:
+      operationId: categorias_moto_update
+      parameters:
+      - in: path
+        name: id_categoria
+        schema:
+          type: integer
+        description: A unique integer value identifying this Categoría de Moto.
+        required: true
+      tags:
+      - categorias-moto
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoriaMoto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CategoriaMoto'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CategoriaMoto'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaMoto'
+          description: ''
+    patch:
+      operationId: categorias_moto_partial_update
+      parameters:
+      - in: path
+        name: id_categoria
+        schema:
+          type: integer
+        description: A unique integer value identifying this Categoría de Moto.
+        required: true
+      tags:
+      - categorias-moto
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCategoriaMoto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCategoriaMoto'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCategoriaMoto'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaMoto'
+          description: ''
+    delete:
+      operationId: categorias_moto_destroy
+      parameters:
+      - in: path
+        name: id_categoria
+        schema:
+          type: integer
+        description: A unique integer value identifying this Categoría de Moto.
+        required: true
+      tags:
+      - categorias-moto
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/clientes/:
+    get:
+      operationId: clientes_list
+      description: GET /clientes/ → Listar todos los perfiles (solo staff)
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - clientes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClientePerfilList'
+          description: ''
+  /api/clientes/perfil/:
+    get:
+      operationId: clientes_perfil_retrieve
+      description: |-
+        GET    /clientes/perfil/  → Ver el perfil del cliente autenticado
+        POST   /clientes/perfil/  → Crear el perfil del cliente autenticado
+        PATCH  /clientes/perfil/  → Actualizar parcialmente el perfil del cliente autenticado
+        DELETE /clientes/perfil/  → Eliminar el perfil del cliente autenticado
+      tags:
+      - clientes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: clientes_perfil_create
+      description: Crea el perfil si no existe, o lo actualiza si ya existe (upsert).
+      tags:
+      - clientes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: clientes_perfil_partial_update
+      description: Actualiza parcialmente el perfil del cliente autenticado.
+      tags:
+      - clientes
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: clientes_perfil_destroy
+      description: Elimina el perfil del cliente autenticado.
+      tags:
+      - clientes
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/compras/:
+    get:
+      operationId: compras_list
+      parameters:
+      - in: query
+        name: estado
+        schema:
+          type: string
+      - in: query
+        name: fecha_compra_after
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: fecha_compra_before
+        schema:
+          type: string
+          format: date
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: moto
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: proveedor
+        schema:
+          type: integer
+      - in: query
+        name: repuesto
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - compras
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCompraList'
+          description: ''
+    post:
+      operationId: compras_create
+      tags:
+      - compras
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Compra'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Compra'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Compra'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Compra'
+          description: ''
+  /api/compras/{id_compra}/:
+    get:
+      operationId: compras_retrieve
+      parameters:
+      - in: path
+        name: id_compra
+        schema:
+          type: integer
+        description: A unique integer value identifying this Compra.
+        required: true
+      tags:
+      - compras
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Compra'
+          description: ''
+    put:
+      operationId: compras_update
+      parameters:
+      - in: path
+        name: id_compra
+        schema:
+          type: integer
+        description: A unique integer value identifying this Compra.
+        required: true
+      tags:
+      - compras
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Compra'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Compra'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Compra'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Compra'
+          description: ''
+    patch:
+      operationId: compras_partial_update
+      parameters:
+      - in: path
+        name: id_compra
+        schema:
+          type: integer
+        description: A unique integer value identifying this Compra.
+        required: true
+      tags:
+      - compras
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCompra'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCompra'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCompra'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Compra'
+          description: ''
+    delete:
+      operationId: compras_destroy
+      parameters:
+      - in: path
+        name: id_compra
+        schema:
+          type: integer
+        description: A unique integer value identifying this Compra.
+        required: true
+      tags:
+      - compras
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/compras/{id_compra}/recibir/:
+    post:
+      operationId: compras_recibir_create
+      parameters:
+      - in: path
+        name: id_compra
+        schema:
+          type: integer
+        description: A unique integer value identifying this Compra.
+        required: true
+      tags:
+      - compras
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Compra'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Compra'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Compra'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Compra'
+          description: ''
+  /api/compras/stats/:
+    get:
+      operationId: compras_stats_retrieve
+      tags:
+      - compras
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Compra'
+          description: ''
+  /api/devoluciones/:
+    get:
+      operationId: devoluciones_list
+      description: Devoluciones conectadas a DevolucionService.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - devoluciones
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDevolucionList'
+          description: ''
+    post:
+      operationId: devoluciones_create
+      description: Devoluciones conectadas a DevolucionService.
+      tags:
+      - devoluciones
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DevolucionCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DevolucionCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DevolucionCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DevolucionCreate'
+          description: ''
+  /api/devoluciones/{id}/:
+    get:
+      operationId: devoluciones_retrieve
+      description: Devoluciones conectadas a DevolucionService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - devoluciones
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Devolucion'
+          description: ''
+  /api/devoluciones/{id}/aprobar/:
+    post:
+      operationId: devoluciones_aprobar_create
+      description: Devoluciones conectadas a DevolucionService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - devoluciones
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Devolucion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Devolucion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Devolucion'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Devolucion'
+          description: ''
+  /api/devoluciones/{id}/rechazar/:
+    post:
+      operationId: devoluciones_rechazar_create
+      description: Devoluciones conectadas a DevolucionService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - devoluciones
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Devolucion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Devolucion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Devolucion'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Devolucion'
+          description: ''
+  /api/devoluciones/stats/:
+    get:
+      operationId: devoluciones_stats_retrieve
+      description: Devoluciones conectadas a DevolucionService.
+      tags:
+      - devoluciones
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Devolucion'
+          description: ''
+  /api/documentos-venta/:
+    get:
+      operationId: documentos_venta_list
+      description: Documentos de venta con archivos reales vía DocumentoVentaService.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - documentos-venta
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDocumentoVentaList'
+          description: ''
+    post:
+      operationId: documentos_venta_create
+      description: Documentos de venta con archivos reales vía DocumentoVentaService.
+      tags:
+      - documentos-venta
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DocumentoVentaCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DocumentoVentaCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentoVentaCreate'
+          description: ''
+  /api/documentos-venta/{id}/:
+    get:
+      operationId: documentos_venta_retrieve
+      description: Documentos de venta con archivos reales vía DocumentoVentaService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - documentos-venta
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentoVenta'
+          description: ''
+    delete:
+      operationId: documentos_venta_destroy
+      description: Documentos de venta con archivos reales vía DocumentoVentaService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - documentos-venta
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/documentos-venta/{id}/archivo/:
+    get:
+      operationId: documentos_venta_archivo_retrieve
+      description: Documentos de venta con archivos reales vía DocumentoVentaService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - documentos-venta
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentoVenta'
+          description: ''
+  /api/facturas/:
+    get:
+      operationId: facturas_list
+      description: Facturas conectadas a FacturaService.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - facturas
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFacturaList'
+          description: ''
+    post:
+      operationId: facturas_create
+      description: Facturas conectadas a FacturaService.
+      tags:
+      - facturas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FacturaCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FacturaCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FacturaCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacturaCreate'
+          description: ''
+  /api/facturas/{id}/:
+    get:
+      operationId: facturas_retrieve
+      description: Facturas conectadas a FacturaService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - facturas
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Factura'
+          description: ''
+  /api/financiamientos/:
+    get:
+      operationId: financiamientos_list
+      description: |-
+        ViewSet CRUD de financiamientos.
+        Solo accesible para staff/admin.
+
+        Endpoints generados:
+          GET    /financiamientos/              → listar todos
+          POST   /financiamientos/              → crear
+          GET    /financiamientos/<id>/         → detalle
+          PATCH  /financiamientos/<id>/         → editar
+          DELETE /financiamientos/<id>/         → eliminar
+
+        Filtros disponibles:
+          ?estado=activo
+          ?id_venta=<id>
+          ?entidad_financiera=<nombre>
+          ?monto_min=<valor>
+          ?monto_max=<valor>
+
+        Acciones custom:
+          GET  /financiamientos/stats/          → estadísticas globales
+      parameters:
+      - in: query
+        name: entidad_financiera
+        schema:
+          type: string
+      - in: query
+        name: estado
+        schema:
+          type: string
+          enum:
+          - activo
+          - cancelado
+          - pagado
+          - vencido
+        description: |-
+          * `activo` - Activo
+          * `pagado` - Pagado
+          * `vencido` - Vencido
+          * `cancelado` - Cancelado
+      - in: query
+        name: id_venta
+        schema:
+          type: integer
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: monto_max
+        schema:
+          type: number
+      - in: query
+        name: monto_min
+        schema:
+          type: number
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - financiamientos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFinanciamientoList'
+          description: ''
+    post:
+      operationId: financiamientos_create
+      description: |-
+        ViewSet CRUD de financiamientos.
+        Solo accesible para staff/admin.
+
+        Endpoints generados:
+          GET    /financiamientos/              → listar todos
+          POST   /financiamientos/              → crear
+          GET    /financiamientos/<id>/         → detalle
+          PATCH  /financiamientos/<id>/         → editar
+          DELETE /financiamientos/<id>/         → eliminar
+
+        Filtros disponibles:
+          ?estado=activo
+          ?id_venta=<id>
+          ?entidad_financiera=<nombre>
+          ?monto_min=<valor>
+          ?monto_max=<valor>
+
+        Acciones custom:
+          GET  /financiamientos/stats/          → estadísticas globales
+      tags:
+      - financiamientos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FinanciamientoCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FinanciamientoCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FinanciamientoCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FinanciamientoCreate'
+          description: ''
+  /api/financiamientos/{id}/:
+    get:
+      operationId: financiamientos_retrieve
+      description: |-
+        ViewSet CRUD de financiamientos.
+        Solo accesible para staff/admin.
+
+        Endpoints generados:
+          GET    /financiamientos/              → listar todos
+          POST   /financiamientos/              → crear
+          GET    /financiamientos/<id>/         → detalle
+          PATCH  /financiamientos/<id>/         → editar
+          DELETE /financiamientos/<id>/         → eliminar
+
+        Filtros disponibles:
+          ?estado=activo
+          ?id_venta=<id>
+          ?entidad_financiera=<nombre>
+          ?monto_min=<valor>
+          ?monto_max=<valor>
+
+        Acciones custom:
+          GET  /financiamientos/stats/          → estadísticas globales
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - financiamientos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Financiamiento'
+          description: ''
+    patch:
+      operationId: financiamientos_partial_update
+      description: |-
+        ViewSet CRUD de financiamientos.
+        Solo accesible para staff/admin.
+
+        Endpoints generados:
+          GET    /financiamientos/              → listar todos
+          POST   /financiamientos/              → crear
+          GET    /financiamientos/<id>/         → detalle
+          PATCH  /financiamientos/<id>/         → editar
+          DELETE /financiamientos/<id>/         → eliminar
+
+        Filtros disponibles:
+          ?estado=activo
+          ?id_venta=<id>
+          ?entidad_financiera=<nombre>
+          ?monto_min=<valor>
+          ?monto_max=<valor>
+
+        Acciones custom:
+          GET  /financiamientos/stats/          → estadísticas globales
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - financiamientos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedFinanciamiento'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedFinanciamiento'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedFinanciamiento'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Financiamiento'
+          description: ''
+    delete:
+      operationId: financiamientos_destroy
+      description: |-
+        ViewSet CRUD de financiamientos.
+        Solo accesible para staff/admin.
+
+        Endpoints generados:
+          GET    /financiamientos/              → listar todos
+          POST   /financiamientos/              → crear
+          GET    /financiamientos/<id>/         → detalle
+          PATCH  /financiamientos/<id>/         → editar
+          DELETE /financiamientos/<id>/         → eliminar
+
+        Filtros disponibles:
+          ?estado=activo
+          ?id_venta=<id>
+          ?entidad_financiera=<nombre>
+          ?monto_min=<valor>
+          ?monto_max=<valor>
+
+        Acciones custom:
+          GET  /financiamientos/stats/          → estadísticas globales
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - financiamientos
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/financiamientos/stats/:
+    get:
+      operationId: financiamientos_stats_retrieve
+      description: |-
+        Resumen de financiamientos: totales por estado, montos y promedios.
+        Solo staff.
+      tags:
+      - financiamientos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Financiamiento'
+          description: ''
+  /api/garantias/:
+    get:
+      operationId: garantias_list
+      description: Garantías conectadas a GarantiaService.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - garantias
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedGarantiaList'
+          description: ''
+    post:
+      operationId: garantias_create
+      description: Garantías conectadas a GarantiaService.
+      tags:
+      - garantias
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GarantiaCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GarantiaCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GarantiaCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GarantiaCreate'
+          description: ''
+  /api/garantias/{id}/:
+    get:
+      operationId: garantias_retrieve
+      description: Garantías conectadas a GarantiaService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - garantias
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Garantia'
+          description: ''
+    patch:
+      operationId: garantias_partial_update
+      description: Garantías conectadas a GarantiaService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - garantias
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGarantia'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGarantia'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGarantia'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Garantia'
+          description: ''
+  /api/health/:
+    get:
+      operationId: health_retrieve
+      tags:
+      - health
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/historial-estado-venta/:
+    get:
+      operationId: historial_estado_venta_list
+      description: |-
+        Historial append-only: solo lectura.
+        Generado automáticamente por los Services; no editable vía API.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - historial-estado-venta
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedHistorialEstadoVentaList'
+          description: ''
+  /api/historial-estado-venta/{id}/:
+    get:
+      operationId: historial_estado_venta_retrieve
+      description: |-
+        Historial append-only: solo lectura.
+        Generado automáticamente por los Services; no editable vía API.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - historial-estado-venta
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HistorialEstadoVenta'
+          description: ''
+  /api/items-carrito/:
+    get:
+      operationId: items_carrito_list
+      description: |-
+        ViewSet CRUD de items_carrito (tabla: items_carrito).
+
+        Clientes: CRUD sobre ítems de sus propios carritos.
+        Administradores: solo lectura.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - items-carrito
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedItemCarritoList'
+          description: ''
+    post:
+      operationId: items_carrito_create
+      description: |-
+        ViewSet CRUD de items_carrito (tabla: items_carrito).
+
+        Clientes: CRUD sobre ítems de sus propios carritos.
+        Administradores: solo lectura.
+      tags:
+      - items-carrito
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemCarrito'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ItemCarrito'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ItemCarrito'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemCarrito'
+          description: ''
+  /api/items-carrito/{id}/:
+    get:
+      operationId: items_carrito_retrieve
+      description: |-
+        ViewSet CRUD de items_carrito (tabla: items_carrito).
+
+        Clientes: CRUD sobre ítems de sus propios carritos.
+        Administradores: solo lectura.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - items-carrito
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemCarrito'
+          description: ''
+    patch:
+      operationId: items_carrito_partial_update
+      description: |-
+        ViewSet CRUD de items_carrito (tabla: items_carrito).
+
+        Clientes: CRUD sobre ítems de sus propios carritos.
+        Administradores: solo lectura.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - items-carrito
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedItemCarrito'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedItemCarrito'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedItemCarrito'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemCarrito'
+          description: ''
+    delete:
+      operationId: items_carrito_destroy
+      description: |-
+        ViewSet CRUD de items_carrito (tabla: items_carrito).
+
+        Clientes: CRUD sobre ítems de sus propios carritos.
+        Administradores: solo lectura.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - items-carrito
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/items-carrito/stats/:
+    get:
+      operationId: items_carrito_stats_retrieve
+      description: Resumen de ítems del carrito. Solo staff.
+      tags:
+      - items-carrito
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemCarrito'
+          description: ''
+  /api/mantenimientos/:
+    get:
+      operationId: mantenimientos_list
+      description: Mantenimientos conectados a MantenimientoService.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - mantenimientos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMantenimientoList'
+          description: ''
+    post:
+      operationId: mantenimientos_create
+      description: Mantenimientos conectados a MantenimientoService.
+      tags:
+      - mantenimientos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mantenimiento'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Mantenimiento'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Mantenimiento'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mantenimiento'
+          description: ''
+  /api/mantenimientos/{id}/:
+    get:
+      operationId: mantenimientos_retrieve
+      description: Mantenimientos conectados a MantenimientoService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - mantenimientos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mantenimiento'
+          description: ''
+    put:
+      operationId: mantenimientos_update
+      description: Mantenimientos conectados a MantenimientoService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - mantenimientos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mantenimiento'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Mantenimiento'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Mantenimiento'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mantenimiento'
+          description: ''
+    patch:
+      operationId: mantenimientos_partial_update
+      description: Mantenimientos conectados a MantenimientoService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - mantenimientos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMantenimiento'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMantenimiento'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMantenimiento'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mantenimiento'
+          description: ''
+    delete:
+      operationId: mantenimientos_destroy
+      description: Mantenimientos conectados a MantenimientoService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - mantenimientos
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/mantenimientos/{id}/finalizar/:
+    post:
+      operationId: mantenimientos_finalizar_create
+      description: Mantenimientos conectados a MantenimientoService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - mantenimientos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mantenimiento'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Mantenimiento'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Mantenimiento'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mantenimiento'
+          description: ''
+  /api/mantenimientos/{id}/update-status/:
+    post:
+      operationId: mantenimientos_update_status_create
+      description: Mantenimientos conectados a MantenimientoService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - mantenimientos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mantenimiento'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Mantenimiento'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Mantenimiento'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mantenimiento'
+          description: ''
+  /api/mantenimientos/stats/:
+    get:
+      operationId: mantenimientos_stats_retrieve
+      description: Mantenimientos conectados a MantenimientoService.
+      tags:
+      - mantenimientos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mantenimiento'
+          description: ''
+  /api/marcas/:
+    get:
+      operationId: marcas_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - marcas
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMarcaList'
+          description: ''
+    post:
+      operationId: marcas_create
+      tags:
+      - marcas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Marca'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Marca'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Marca'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Marca'
+          description: ''
+  /api/marcas/{id_marca}/:
+    get:
+      operationId: marcas_retrieve
+      parameters:
+      - in: path
+        name: id_marca
+        schema:
+          type: integer
+        description: A unique integer value identifying this Marca.
+        required: true
+      tags:
+      - marcas
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Marca'
+          description: ''
+    put:
+      operationId: marcas_update
+      parameters:
+      - in: path
+        name: id_marca
+        schema:
+          type: integer
+        description: A unique integer value identifying this Marca.
+        required: true
+      tags:
+      - marcas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Marca'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Marca'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Marca'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Marca'
+          description: ''
+    patch:
+      operationId: marcas_partial_update
+      parameters:
+      - in: path
+        name: id_marca
+        schema:
+          type: integer
+        description: A unique integer value identifying this Marca.
+        required: true
+      tags:
+      - marcas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMarca'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMarca'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMarca'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Marca'
+          description: ''
+    delete:
+      operationId: marcas_destroy
+      parameters:
+      - in: path
+        name: id_marca
+        schema:
+          type: integer
+        description: A unique integer value identifying this Marca.
+        required: true
+      tags:
+      - marcas
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/motos/:
+    get:
+      operationId: motos_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - motos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMotoList'
+          description: ''
+    post:
+      operationId: motos_create
+      tags:
+      - motos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Moto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Moto'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Moto'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Moto'
+          description: ''
+  /api/motos/{id_moto}/:
+    get:
+      operationId: motos_retrieve
+      parameters:
+      - in: path
+        name: id_moto
+        schema:
+          type: integer
+        description: A unique integer value identifying this Moto.
+        required: true
+      tags:
+      - motos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Moto'
+          description: ''
+    put:
+      operationId: motos_update
+      parameters:
+      - in: path
+        name: id_moto
+        schema:
+          type: integer
+        description: A unique integer value identifying this Moto.
+        required: true
+      tags:
+      - motos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Moto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Moto'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Moto'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Moto'
+          description: ''
+    patch:
+      operationId: motos_partial_update
+      parameters:
+      - in: path
+        name: id_moto
+        schema:
+          type: integer
+        description: A unique integer value identifying this Moto.
+        required: true
+      tags:
+      - motos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMoto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMoto'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMoto'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Moto'
+          description: ''
+    delete:
+      operationId: motos_destroy
+      parameters:
+      - in: path
+        name: id_moto
+        schema:
+          type: integer
+        description: A unique integer value identifying this Moto.
+        required: true
+      tags:
+      - motos
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/movimientos-inventario/:
+    get:
+      operationId: movimientos_inventario_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - movimientos-inventario
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMovimientoInventarioList'
+          description: ''
+    post:
+      operationId: movimientos_inventario_create
+      tags:
+      - movimientos-inventario
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovimientoInventario'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MovimientoInventario'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MovimientoInventario'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovimientoInventario'
+          description: ''
+  /api/movimientos-inventario/{id_movimiento}/:
+    get:
+      operationId: movimientos_inventario_retrieve
+      parameters:
+      - in: path
+        name: id_movimiento
+        schema:
+          type: integer
+        description: A unique integer value identifying this Movimiento de Inventario.
+        required: true
+      tags:
+      - movimientos-inventario
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovimientoInventario'
+          description: ''
+  /api/newsletter/subscribe/:
+    post:
+      operationId: newsletter_subscribe_create
+      tags:
+      - newsletter
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/notificaciones/:
+    get:
+      operationId: notificaciones_list
+      description: |-
+        ViewSet CRUD de notificaciones.
+
+        Endpoints generados:
+          GET    /notificaciones/              → listar (admin: todas; usuario: las propias)
+          POST   /notificaciones/              → crear (solo admin)
+          GET    /notificaciones/<id>/         → detalle
+          PATCH  /notificaciones/<id>/         → editar
+          DELETE /notificaciones/<id>/         → eliminar
+
+        Acciones custom:
+          POST /notificaciones/<id>/marcar_leida/   → marca como leída
+          POST /notificaciones/marcar_todas_leidas/ → marca todas como leídas
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - notificaciones
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedNotificacionList'
+          description: ''
+    post:
+      operationId: notificaciones_create
+      description: |-
+        ViewSet CRUD de notificaciones.
+
+        Endpoints generados:
+          GET    /notificaciones/              → listar (admin: todas; usuario: las propias)
+          POST   /notificaciones/              → crear (solo admin)
+          GET    /notificaciones/<id>/         → detalle
+          PATCH  /notificaciones/<id>/         → editar
+          DELETE /notificaciones/<id>/         → eliminar
+
+        Acciones custom:
+          POST /notificaciones/<id>/marcar_leida/   → marca como leída
+          POST /notificaciones/marcar_todas_leidas/ → marca todas como leídas
+      tags:
+      - notificaciones
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificacionCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NotificacionCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NotificacionCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificacionCreate'
+          description: ''
+  /api/notificaciones/{id}/:
+    get:
+      operationId: notificaciones_retrieve
+      description: |-
+        ViewSet CRUD de notificaciones.
+
+        Endpoints generados:
+          GET    /notificaciones/              → listar (admin: todas; usuario: las propias)
+          POST   /notificaciones/              → crear (solo admin)
+          GET    /notificaciones/<id>/         → detalle
+          PATCH  /notificaciones/<id>/         → editar
+          DELETE /notificaciones/<id>/         → eliminar
+
+        Acciones custom:
+          POST /notificaciones/<id>/marcar_leida/   → marca como leída
+          POST /notificaciones/marcar_todas_leidas/ → marca todas como leídas
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - notificaciones
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notificacion'
+          description: ''
+    patch:
+      operationId: notificaciones_partial_update
+      description: |-
+        ViewSet CRUD de notificaciones.
+
+        Endpoints generados:
+          GET    /notificaciones/              → listar (admin: todas; usuario: las propias)
+          POST   /notificaciones/              → crear (solo admin)
+          GET    /notificaciones/<id>/         → detalle
+          PATCH  /notificaciones/<id>/         → editar
+          DELETE /notificaciones/<id>/         → eliminar
+
+        Acciones custom:
+          POST /notificaciones/<id>/marcar_leida/   → marca como leída
+          POST /notificaciones/marcar_todas_leidas/ → marca todas como leídas
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - notificaciones
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificacion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificacion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificacion'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notificacion'
+          description: ''
+    delete:
+      operationId: notificaciones_destroy
+      description: |-
+        ViewSet CRUD de notificaciones.
+
+        Endpoints generados:
+          GET    /notificaciones/              → listar (admin: todas; usuario: las propias)
+          POST   /notificaciones/              → crear (solo admin)
+          GET    /notificaciones/<id>/         → detalle
+          PATCH  /notificaciones/<id>/         → editar
+          DELETE /notificaciones/<id>/         → eliminar
+
+        Acciones custom:
+          POST /notificaciones/<id>/marcar_leida/   → marca como leída
+          POST /notificaciones/marcar_todas_leidas/ → marca todas como leídas
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - notificaciones
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/notificaciones/{id}/marcar_leida/:
+    post:
+      operationId: notificaciones_marcar_leida_create
+      description: Marca una notificación como leída.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - notificaciones
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notificacion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Notificacion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Notificacion'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notificacion'
+          description: ''
+  /api/notificaciones/enviar_masivo/:
+    post:
+      operationId: notificaciones_enviar_masivo_create
+      description: |-
+        Crea notificaciones y envía correos a todos los usuarios o a una lista específica.
+        Body esperado:
+        {
+            "titulo": "Asunto del correo",
+            "mensaje": "Cuerpo del correo",
+            "usuarios": [1, 2, 3] # Opcional, si no se envía va a todos.
+        }
+      tags:
+      - notificaciones
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notificacion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Notificacion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Notificacion'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notificacion'
+          description: ''
+  /api/notificaciones/marcar_todas_leidas/:
+    post:
+      operationId: notificaciones_marcar_todas_leidas_create
+      description: Marca todas las notificaciones del usuario como leídas.
+      tags:
+      - notificaciones
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notificacion'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Notificacion'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Notificacion'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notificacion'
+          description: ''
+  /api/pagos/:
+    get:
+      operationId: pagos_list
+      description: Pagos conectados a PagoService.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - pagos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPagoList'
+          description: ''
+    post:
+      operationId: pagos_create
+      description: Pagos conectados a PagoService.
+      tags:
+      - pagos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PagoCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PagoCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PagoCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagoCreate'
+          description: ''
+  /api/pagos/{id}/:
+    get:
+      operationId: pagos_retrieve
+      description: Pagos conectados a PagoService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - pagos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pago'
+          description: ''
+  /api/pagos/stats/:
+    get:
+      operationId: pagos_stats_retrieve
+      description: Pagos conectados a PagoService.
+      tags:
+      - pagos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pago'
+          description: ''
+  /api/pedidos/:
+    get:
+      operationId: pedidos_list
+      description: ViewSet CRUD de pedidos conectado a PedidoService.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - pedidos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPedidoList'
+          description: ''
+    post:
+      operationId: pedidos_create
+      description: ViewSet CRUD de pedidos conectado a PedidoService.
+      tags:
+      - pedidos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PedidoCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PedidoCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PedidoCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PedidoCreate'
+          description: ''
+  /api/pedidos/{id}/:
+    get:
+      operationId: pedidos_retrieve
+      description: ViewSet CRUD de pedidos conectado a PedidoService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - pedidos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+          description: ''
+    patch:
+      operationId: pedidos_partial_update
+      description: ViewSet CRUD de pedidos conectado a PedidoService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - pedidos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPedido'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPedido'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPedido'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+          description: ''
+    delete:
+      operationId: pedidos_destroy
+      description: ViewSet CRUD de pedidos conectado a PedidoService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - pedidos
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/pedidos/{id}/confirm/:
+    post:
+      operationId: pedidos_confirm_create
+      description: ViewSet CRUD de pedidos conectado a PedidoService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - pedidos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pedido'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Pedido'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Pedido'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+          description: ''
+  /api/pedidos/{id}/update-status/:
+    post:
+      operationId: pedidos_update_status_create
+      description: ViewSet CRUD de pedidos conectado a PedidoService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - pedidos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pedido'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Pedido'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Pedido'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+          description: ''
+  /api/pedidos/stats/:
+    get:
+      operationId: pedidos_stats_retrieve
+      description: ViewSet CRUD de pedidos conectado a PedidoService.
+      tags:
+      - pedidos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pedido'
+          description: ''
+  /api/proveedores/:
+    get:
+      operationId: proveedores_list
+      parameters:
+      - in: query
+        name: contacto
+        schema:
+          type: string
+      - in: query
+        name: correo
+        schema:
+          type: string
+      - in: query
+        name: estado
+        schema:
+          type: boolean
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: nombre
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - proveedores
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProveedorList'
+          description: ''
+    post:
+      operationId: proveedores_create
+      tags:
+      - proveedores
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Proveedor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Proveedor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Proveedor'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proveedor'
+          description: ''
+  /api/proveedores/{id}/:
+    get:
+      operationId: proveedores_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Proveedor.
+        required: true
+      tags:
+      - proveedores
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proveedor'
+          description: ''
+    put:
+      operationId: proveedores_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Proveedor.
+        required: true
+      tags:
+      - proveedores
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Proveedor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Proveedor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Proveedor'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proveedor'
+          description: ''
+    patch:
+      operationId: proveedores_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Proveedor.
+        required: true
+      tags:
+      - proveedores
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProveedor'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProveedor'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProveedor'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proveedor'
+          description: ''
+    delete:
+      operationId: proveedores_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Proveedor.
+        required: true
+      tags:
+      - proveedores
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/proveedores/stats/:
+    get:
+      operationId: proveedores_stats_retrieve
+      tags:
+      - proveedores
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Proveedor'
+          description: ''
+  /api/repuestos/:
+    get:
+      operationId: repuestos_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - repuestos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRepuestoList'
+          description: ''
+    post:
+      operationId: repuestos_create
+      tags:
+      - repuestos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Repuesto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Repuesto'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Repuesto'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Repuesto'
+          description: ''
+  /api/repuestos-mantenimiento/:
+    get:
+      operationId: repuestos_mantenimiento_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: mantenimiento
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: repuesto
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - repuestos-mantenimiento
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRepuestoMantenimientoList'
+          description: ''
+    post:
+      operationId: repuestos_mantenimiento_create
+      tags:
+      - repuestos-mantenimiento
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepuestoMantenimiento'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RepuestoMantenimiento'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RepuestoMantenimiento'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepuestoMantenimiento'
+          description: ''
+  /api/repuestos-mantenimiento/{id_repuesto_mantenimiento}/:
+    get:
+      operationId: repuestos_mantenimiento_retrieve
+      parameters:
+      - in: path
+        name: id_repuesto_mantenimiento
+        schema:
+          type: integer
+        description: A unique integer value identifying this Repuesto de mantenimiento.
+        required: true
+      tags:
+      - repuestos-mantenimiento
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepuestoMantenimiento'
+          description: ''
+    put:
+      operationId: repuestos_mantenimiento_update
+      parameters:
+      - in: path
+        name: id_repuesto_mantenimiento
+        schema:
+          type: integer
+        description: A unique integer value identifying this Repuesto de mantenimiento.
+        required: true
+      tags:
+      - repuestos-mantenimiento
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepuestoMantenimiento'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RepuestoMantenimiento'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RepuestoMantenimiento'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepuestoMantenimiento'
+          description: ''
+    patch:
+      operationId: repuestos_mantenimiento_partial_update
+      parameters:
+      - in: path
+        name: id_repuesto_mantenimiento
+        schema:
+          type: integer
+        description: A unique integer value identifying this Repuesto de mantenimiento.
+        required: true
+      tags:
+      - repuestos-mantenimiento
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRepuestoMantenimiento'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRepuestoMantenimiento'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRepuestoMantenimiento'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepuestoMantenimiento'
+          description: ''
+    delete:
+      operationId: repuestos_mantenimiento_destroy
+      parameters:
+      - in: path
+        name: id_repuesto_mantenimiento
+        schema:
+          type: integer
+        description: A unique integer value identifying this Repuesto de mantenimiento.
+        required: true
+      tags:
+      - repuestos-mantenimiento
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/repuestos-mantenimiento/stats/:
+    get:
+      operationId: repuestos_mantenimiento_stats_retrieve
+      tags:
+      - repuestos-mantenimiento
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepuestoMantenimiento'
+          description: ''
+  /api/repuestos/{id_repuesto}/:
+    get:
+      operationId: repuestos_retrieve
+      parameters:
+      - in: path
+        name: id_repuesto
+        schema:
+          type: integer
+        description: A unique integer value identifying this Repuesto.
+        required: true
+      tags:
+      - repuestos
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Repuesto'
+          description: ''
+    put:
+      operationId: repuestos_update
+      parameters:
+      - in: path
+        name: id_repuesto
+        schema:
+          type: integer
+        description: A unique integer value identifying this Repuesto.
+        required: true
+      tags:
+      - repuestos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Repuesto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Repuesto'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Repuesto'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Repuesto'
+          description: ''
+    patch:
+      operationId: repuestos_partial_update
+      parameters:
+      - in: path
+        name: id_repuesto
+        schema:
+          type: integer
+        description: A unique integer value identifying this Repuesto.
+        required: true
+      tags:
+      - repuestos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRepuesto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRepuesto'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRepuesto'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Repuesto'
+          description: ''
+    delete:
+      operationId: repuestos_destroy
+      parameters:
+      - in: path
+        name: id_repuesto
+        schema:
+          type: integer
+        description: A unique integer value identifying this Repuesto.
+        required: true
+      tags:
+      - repuestos
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/seguros/:
+    get:
+      operationId: seguros_list
+      description: 'Seguros: lectura filtrada para clientes, gestión completa para
+        administradores.'
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - seguros
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedSeguroList'
+          description: ''
+    post:
+      operationId: seguros_create
+      description: 'Seguros: lectura filtrada para clientes, gestión completa para
+        administradores.'
+      tags:
+      - seguros
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SeguroCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SeguroCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SeguroCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SeguroCreate'
+          description: ''
+  /api/seguros/{id}/:
+    get:
+      operationId: seguros_retrieve
+      description: 'Seguros: lectura filtrada para clientes, gestión completa para
+        administradores.'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - seguros
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Seguro'
+          description: ''
+    patch:
+      operationId: seguros_partial_update
+      description: 'Seguros: lectura filtrada para clientes, gestión completa para
+        administradores.'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - seguros
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSeguro'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSeguro'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSeguro'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Seguro'
+          description: ''
+    delete:
+      operationId: seguros_destroy
+      description: 'Seguros: lectura filtrada para clientes, gestión completa para
+        administradores.'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - seguros
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/servicios/:
+    get:
+      operationId: servicios_list
+      parameters:
+      - in: query
+        name: descripcion
+        schema:
+          type: string
+      - in: query
+        name: estado
+        schema:
+          type: boolean
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: nombre
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: precio_base
+        schema:
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - servicios
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedServicioList'
+          description: ''
+    post:
+      operationId: servicios_create
+      tags:
+      - servicios
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Servicio'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Servicio'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Servicio'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Servicio'
+          description: ''
+  /api/servicios/{id}/:
+    get:
+      operationId: servicios_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Servicio.
+        required: true
+      tags:
+      - servicios
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Servicio'
+          description: ''
+    put:
+      operationId: servicios_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Servicio.
+        required: true
+      tags:
+      - servicios
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Servicio'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Servicio'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Servicio'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Servicio'
+          description: ''
+    patch:
+      operationId: servicios_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Servicio.
+        required: true
+      tags:
+      - servicios
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedServicio'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedServicio'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedServicio'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Servicio'
+          description: ''
+    delete:
+      operationId: servicios_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Servicio.
+        required: true
+      tags:
+      - servicios
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/servicios/stats/:
+    get:
+      operationId: servicios_stats_retrieve
+      tags:
+      - servicios
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Servicio'
+          description: ''
+  /api/users/:
+    get:
+      operationId: users_list
+      parameters:
+      - in: query
+        name: is_active
+        schema:
+          type: boolean
+      - in: query
+        name: is_staff
+        schema:
+          type: boolean
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+    post:
+      operationId: users_create
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/users/{id}/:
+    get:
+      operationId: users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: users_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/users/{id}/set-role/:
+    post:
+      operationId: users_set_role_create
+      description: 'Deprecado: los roles funcionales se derivan de is_staff.'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/users/{id}/toggle-active/:
+    post:
+      operationId: users_toggle_active_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/users/change-password/:
+    post:
+      operationId: users_change_password_create
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/users/profile/:
+    get:
+      operationId: users_profile_retrieve
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: users_profile_partial_update
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/users/stats/:
+    get:
+      operationId: users_stats_retrieve
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/ventas/:
+    get:
+      operationId: ventas_list
+      description: ViewSet CRUD de ventas conectado a VentaService.
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - ventas
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedVentaList'
+          description: ''
+    post:
+      operationId: ventas_create
+      description: ViewSet CRUD de ventas conectado a VentaService.
+      tags:
+      - ventas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VentaCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VentaCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VentaCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VentaCreate'
+          description: ''
+  /api/ventas/{id}/:
+    get:
+      operationId: ventas_retrieve
+      description: ViewSet CRUD de ventas conectado a VentaService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - ventas
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VentaDetail'
+          description: ''
+    patch:
+      operationId: ventas_partial_update
+      description: ViewSet CRUD de ventas conectado a VentaService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - ventas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedVenta'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedVenta'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedVenta'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venta'
+          description: ''
+    delete:
+      operationId: ventas_destroy
+      description: ViewSet CRUD de ventas conectado a VentaService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - ventas
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/ventas/{id}/financiar/:
+    post:
+      operationId: ventas_financiar_create
+      description: ViewSet CRUD de ventas conectado a VentaService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - ventas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Venta'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Venta'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Venta'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venta'
+          description: ''
+  /api/ventas/{id}/resumen/:
+    get:
+      operationId: ventas_resumen_retrieve
+      description: ViewSet CRUD de ventas conectado a VentaService.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - ventas
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venta'
+          description: ''
+  /api/ventas/stats/:
+    get:
+      operationId: ventas_stats_retrieve
+      description: ViewSet CRUD de ventas conectado a VentaService.
+      tags:
+      - ventas
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Venta'
+          description: ''
+components:
+  schemas:
+    CarritoCompras:
+      type: object
+      description: Serializer de carrito_compras con nombres exactos del esquema SQL.
+      properties:
+        id_carrito:
+          type: integer
+          readOnly: true
+        username_cliente:
+          type: string
+          readOnly: true
+        id_usuario_cliente:
+          type: integer
+          readOnly: true
+        estado:
+          $ref: '#/components/schemas/CarritoComprasEstadoEnum'
+        fecha_creacion:
+          type: string
+          format: date-time
+          readOnly: true
+        num_items:
+          type: string
+          readOnly: true
+        total:
+          type: string
+          readOnly: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemCarrito'
+          readOnly: true
+      required:
+      - fecha_creacion
+      - id_carrito
+      - id_usuario_cliente
+      - items
+      - num_items
+      - total
+      - username_cliente
+    CarritoComprasEstadoEnum:
+      enum:
+      - activo
+      - procesado
+      - abandonado
+      type: string
+      description: |-
+        * `activo` - Activo
+        * `procesado` - Procesado
+        * `abandonado` - Abandonado
+    CategoriaMoto:
+      type: object
+      properties:
+        id_categoria:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 100
+        descripcion:
+          type: string
+          nullable: true
+        estado:
+          type: boolean
+      required:
+      - id_categoria
+      - nombre
+    ClientePerfil:
+      type: object
+      description: Serializer de clientes_perfil con nombres exactos del esquema SQL.
+      properties:
+        id_perfil:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          readOnly: true
+        cedula:
+          type: string
+          maxLength: 20
+        telefono:
+          type: string
+          maxLength: 20
+        direccion:
+          type: string
+        foto_perfil:
+          type: string
+          format: uri
+          nullable: true
+        fecha_nacimiento:
+          type: string
+          format: date
+          nullable: true
+      required:
+      - email
+      - id_perfil
+      - username
+    Compra:
+      type: object
+      properties:
+        id_compra:
+          type: integer
+          readOnly: true
+        proveedor:
+          type: integer
+        moto:
+          type: integer
+          nullable: true
+        repuesto:
+          type: integer
+          nullable: true
+        cantidad:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        precio_unitario:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        fecha_compra:
+          type: string
+          format: date-time
+          readOnly: true
+        estado:
+          $ref: '#/components/schemas/CompraEstadoEnum'
+        stock_aplicado:
+          type: boolean
+          readOnly: true
+      required:
+      - cantidad
+      - fecha_compra
+      - id_compra
+      - precio_unitario
+      - proveedor
+      - stock_aplicado
+      - subtotal
+    CompraEstadoEnum:
+      enum:
+      - Pendiente
+      - Recibida
+      - Cancelada
+      type: string
+      description: |-
+        * `Pendiente` - Pendiente
+        * `Recibida` - Recibida
+        * `Cancelada` - Cancelada
+    CustomToken:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    Devolucion:
+      type: object
+      description: Serializer de devoluciones con nombres exactos del esquema SQL.
+      properties:
+        id_devolucion:
+          type: integer
+          readOnly: true
+        id_venta:
+          type: integer
+        motivo:
+          type: string
+        estado:
+          $ref: '#/components/schemas/DevolucionEstadoEnum'
+        monto_devolucion:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        monto_reembolso_aplicado:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+          description: Monto reembolsado al aprobar (0 si no hubo pagos).
+        stock_reintegrado:
+          type: boolean
+          readOnly: true
+        fecha_solicitud:
+          type: string
+          format: date-time
+          readOnly: true
+        fecha_resolucion:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+      - fecha_solicitud
+      - id_devolucion
+      - id_venta
+      - monto_devolucion
+      - monto_reembolso_aplicado
+      - motivo
+      - stock_reintegrado
+    DevolucionCreate:
+      type: object
+      description: |-
+        Solicitud de devolución total (sin líneas de detalle).
+
+        monto_devolucion = reembolso solicitado; use 0 para devolución física sin dinero.
+      properties:
+        id_venta:
+          type: integer
+        motivo:
+          type: string
+        monto_devolucion:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+      required:
+      - id_venta
+      - monto_devolucion
+      - motivo
+    DevolucionEstadoEnum:
+      enum:
+      - solicitada
+      - aprobada
+      - rechazada
+      - completada
+      type: string
+      description: |-
+        * `solicitada` - Solicitada
+        * `aprobada` - Aprobada
+        * `rechazada` - Rechazada
+        * `completada` - Completada
+    DocumentoVenta:
+      type: object
+      description: |-
+        Serializer de documentos de venta.
+
+        archivo_url_legacy: solo lectura; plan de retiro documentado en DocumentoVentaService.
+      properties:
+        id_documento:
+          type: integer
+          readOnly: true
+        id_venta:
+          type: integer
+          readOnly: true
+        tipo_documento:
+          allOf:
+          - $ref: '#/components/schemas/TipoDocumentoEnum'
+          readOnly: true
+        archivo_url:
+          type: string
+          readOnly: true
+        archivo_url_legacy:
+          type: string
+          readOnly: true
+        nombre_original:
+          type: string
+          readOnly: true
+        tamano_bytes:
+          type: integer
+          readOnly: true
+          nullable: true
+        content_type:
+          type: string
+          readOnly: true
+        subido_por:
+          type: integer
+          readOnly: true
+          nullable: true
+        subido_por_info:
+          type: string
+          readOnly: true
+        fecha_subida:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - archivo_url
+      - archivo_url_legacy
+      - content_type
+      - fecha_subida
+      - id_documento
+      - id_venta
+      - nombre_original
+      - subido_por
+      - subido_por_info
+      - tamano_bytes
+      - tipo_documento
+    DocumentoVentaCreate:
+      type: object
+      description: Subida multipart de documento. archivo es obligatorio para documentos
+        nuevos.
+      properties:
+        id_venta:
+          type: integer
+        tipo_documento:
+          $ref: '#/components/schemas/TipoDocumentoEnum'
+        archivo:
+          type: string
+          format: uri
+      required:
+      - archivo
+      - id_venta
+      - tipo_documento
+    Estado59dEnum:
+      enum:
+      - pendiente
+      - completada
+      - anulada
+      type: string
+      description: |-
+        * `pendiente` - Pendiente
+        * `completada` - Completada
+        * `anulada` - Anulada
+    Estado5abEnum:
+      enum:
+      - activo
+      - pagado
+      - vencido
+      - cancelado
+      type: string
+      description: |-
+        * `activo` - Activo
+        * `pagado` - Pagado
+        * `vencido` - Vencido
+        * `cancelado` - Cancelado
+    Estado908Enum:
+      enum:
+      - pendiente
+      - completado
+      - fallido
+      - reembolsado
+      type: string
+      description: |-
+        * `pendiente` - Pendiente
+        * `completado` - Completado
+        * `fallido` - Fallido
+        * `reembolsado` - Reembolsado
+    EstadoB61Enum:
+      enum:
+      - activa
+      - vencida
+      - anulada
+      type: string
+      description: |-
+        * `activa` - Activa
+        * `vencida` - Vencida
+        * `anulada` - Anulada
+    EstadoC59Enum:
+      enum:
+      - activo
+      - vencido
+      - cancelado
+      type: string
+      description: |-
+        * `activo` - Activo
+        * `vencido` - Vencido
+        * `cancelado` - Cancelado
+    Factura:
+      type: object
+      description: Serializer de facturas con nombres exactos del esquema SQL.
+      properties:
+        id_factura:
+          type: integer
+          readOnly: true
+        id_venta:
+          type: integer
+        numero_factura:
+          type: string
+          maxLength: 50
+        fecha_emision:
+          type: string
+          format: date-time
+          readOnly: true
+        subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        iva:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+      required:
+      - fecha_emision
+      - id_factura
+      - id_venta
+      - iva
+      - numero_factura
+      - subtotal
+      - total
+    FacturaCreate:
+      type: object
+      description: Serializer para emitir una factura. Totales calculados en backend.
+      properties:
+        id_venta:
+          type: integer
+        numero_factura:
+          type: string
+          maxLength: 50
+      required:
+      - id_venta
+      - numero_factura
+    Financiamiento:
+      type: object
+      description: Serializer de financiamientos con nombres exactos del esquema SQL.
+      properties:
+        id_financiamiento:
+          type: integer
+          readOnly: true
+        id_venta:
+          type: integer
+        entidad_financiera:
+          type: string
+          maxLength: 100
+        monto_financiado:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        entrada:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        saldo_pendiente:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        tasa_interes:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        plazo_meses:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        cuota_mensual:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        estado:
+          $ref: '#/components/schemas/Estado5abEnum'
+      required:
+      - cuota_mensual
+      - entidad_financiera
+      - id_financiamiento
+      - id_venta
+      - monto_financiado
+      - plazo_meses
+      - saldo_pendiente
+      - tasa_interes
+    FinanciamientoCreate:
+      type: object
+      description: Serializer para crear un financiamiento (validación de formato).
+      properties:
+        id_venta:
+          type: integer
+        entidad_financiera:
+          type: string
+          maxLength: 100
+        monto_financiado:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        entrada:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        tasa_interes:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        plazo_meses:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        estado:
+          $ref: '#/components/schemas/Estado5abEnum'
+      required:
+      - entidad_financiera
+      - id_venta
+      - monto_financiado
+      - plazo_meses
+      - tasa_interes
+    Garantia:
+      type: object
+      description: Serializer de garantías con nombres exactos del esquema SQL.
+      properties:
+        id_garantia:
+          type: integer
+          readOnly: true
+        id_venta:
+          type: integer
+        id_moto:
+          type: integer
+        meses_garantia:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        fecha_inicio:
+          type: string
+          format: date
+        fecha_fin:
+          type: string
+          format: date
+        descripcion:
+          type: string
+        estado:
+          $ref: '#/components/schemas/EstadoB61Enum'
+      required:
+      - fecha_fin
+      - fecha_inicio
+      - id_garantia
+      - id_moto
+      - id_venta
+      - meses_garantia
+    GarantiaCreate:
+      type: object
+      description: Serializer para registrar una garantía.
+      properties:
+        id_venta:
+          type: integer
+        id_moto:
+          type: integer
+        meses_garantia:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        fecha_inicio:
+          type: string
+          format: date
+        fecha_fin:
+          type: string
+          format: date
+        descripcion:
+          type: string
+        estado:
+          $ref: '#/components/schemas/EstadoB61Enum'
+      required:
+      - fecha_fin
+      - fecha_inicio
+      - id_moto
+      - id_venta
+      - meses_garantia
+    HistorialEstadoVenta:
+      type: object
+      description: Serializer del historial de estados de venta con nombres exactos
+        del esquema SQL.
+      properties:
+        id_historial:
+          type: integer
+          readOnly: true
+        id_venta:
+          type: integer
+          readOnly: true
+        estado_anterior:
+          type: string
+          readOnly: true
+        estado_nuevo:
+          type: string
+          readOnly: true
+        fecha_cambio:
+          type: string
+          format: date-time
+          readOnly: true
+        observacion:
+          type: string
+          readOnly: true
+        id_usuario:
+          type: integer
+          readOnly: true
+          nullable: true
+      required:
+      - estado_anterior
+      - estado_nuevo
+      - fecha_cambio
+      - id_historial
+      - id_usuario
+      - id_venta
+      - observacion
+    ItemCarrito:
+      type: object
+      description: Serializer de items_carrito con nombres exactos del esquema SQL.
+      properties:
+        id_item:
+          type: integer
+          readOnly: true
+        id_carrito:
+          type: integer
+        id_moto:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        id_repuesto:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        cantidad:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        precio_unitario:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+      required:
+      - id_carrito
+      - id_item
+      - precio_unitario
+      - subtotal
+    Mantenimiento:
+      type: object
+      properties:
+        id_mantenimiento:
+          type: integer
+          readOnly: true
+        moto:
+          type: integer
+        usuario_cliente:
+          type: integer
+        servicio:
+          type: integer
+        kilometraje_actual:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        diagnostico_inicial:
+          type: string
+          nullable: true
+        costo_final:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        estado:
+          $ref: '#/components/schemas/MantenimientoEstadoEnum'
+        fecha_registro:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - costo_final
+      - fecha_registro
+      - id_mantenimiento
+      - kilometraje_actual
+      - moto
+      - servicio
+      - usuario_cliente
+    MantenimientoEstadoEnum:
+      enum:
+      - Pendiente
+      - En proceso
+      - Finalizado
+      - Cancelado
+      type: string
+      description: |-
+        * `Pendiente` - Pendiente
+        * `En proceso` - En proceso
+        * `Finalizado` - Finalizado
+        * `Cancelado` - Cancelado
+    Marca:
+      type: object
+      properties:
+        id_marca:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 150
+        descripcion:
+          type: string
+          nullable: true
+        estado:
+          type: boolean
+      required:
+      - id_marca
+      - nombre
+    MetodoPagoEnum:
+      enum:
+      - efectivo
+      - tarjeta
+      - transferencia
+      - credito
+      - otro
+      type: string
+      description: |-
+        * `efectivo` - Efectivo
+        * `tarjeta` - Tarjeta
+        * `transferencia` - Transferencia
+        * `credito` - Crédito
+        * `otro` - Otro
+    Moto:
+      type: object
+      properties:
+        id_moto:
+          type: integer
+          readOnly: true
+        modelo:
+          type: string
+          maxLength: 150
+        anio:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        cilindraje:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        color:
+          type: string
+          maxLength: 50
+        precio:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        stock:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        estado:
+          type: string
+          maxLength: 30
+        imagen:
+          type: string
+          format: uri
+          nullable: true
+        fecha_registro:
+          type: string
+          format: date-time
+          readOnly: true
+        categoria:
+          type: integer
+        marca:
+          type: integer
+      required:
+      - anio
+      - categoria
+      - cilindraje
+      - color
+      - estado
+      - fecha_registro
+      - id_moto
+      - marca
+      - modelo
+      - precio
+      - stock
+    MovimientoInventario:
+      type: object
+      properties:
+        id_movimiento:
+          type: integer
+          readOnly: true
+        usuario:
+          type: integer
+          readOnly: true
+        cantidad:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        tipo_movimiento:
+          type: string
+          maxLength: 50
+        descripcion:
+          type: string
+          nullable: true
+        fecha_movimiento:
+          type: string
+          format: date-time
+          readOnly: true
+        moto:
+          type: integer
+          nullable: true
+        repuesto:
+          type: integer
+          nullable: true
+      required:
+      - cantidad
+      - fecha_movimiento
+      - id_movimiento
+      - tipo_movimiento
+      - usuario
+    Notificacion:
+      type: object
+      description: Serializer de notificaciones con nombres exactos del esquema SQL.
+      properties:
+        id_notificacion:
+          type: integer
+          readOnly: true
+        id_usuario:
+          type: integer
+          readOnly: true
+        titulo:
+          type: string
+          maxLength: 150
+        mensaje:
+          type: string
+        leido:
+          type: boolean
+        fecha_creacion:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - fecha_creacion
+      - id_notificacion
+      - id_usuario
+      - mensaje
+      - titulo
+    NotificacionCreate:
+      type: object
+      description: Serializer para crear una notificación (el id_usuario se asigna
+        en la vista).
+      properties:
+        id_usuario:
+          type: integer
+        titulo:
+          type: string
+          maxLength: 150
+        mensaje:
+          type: string
+      required:
+      - id_usuario
+      - mensaje
+      - titulo
+    PaginatedCarritoComprasList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarritoCompras'
+    PaginatedCategoriaMotoList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoriaMoto'
+    PaginatedClientePerfilList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientePerfil'
+    PaginatedCompraList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Compra'
+    PaginatedDevolucionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Devolucion'
+    PaginatedDocumentoVentaList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentoVenta'
+    PaginatedFacturaList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Factura'
+    PaginatedFinanciamientoList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Financiamiento'
+    PaginatedGarantiaList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Garantia'
+    PaginatedHistorialEstadoVentaList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/HistorialEstadoVenta'
+    PaginatedItemCarritoList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemCarrito'
+    PaginatedMantenimientoList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Mantenimiento'
+    PaginatedMarcaList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Marca'
+    PaginatedMotoList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Moto'
+    PaginatedMovimientoInventarioList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MovimientoInventario'
+    PaginatedNotificacionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notificacion'
+    PaginatedPagoList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pago'
+    PaginatedPedidoList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pedido'
+    PaginatedProveedorList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Proveedor'
+    PaginatedRepuestoList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Repuesto'
+    PaginatedRepuestoMantenimientoList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RepuestoMantenimiento'
+    PaginatedSeguroList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Seguro'
+    PaginatedServicioList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Servicio'
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    PaginatedVentaList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Venta'
+    Pago:
+      type: object
+      description: Serializer de pagos con nombres exactos del esquema SQL.
+      properties:
+        id_pago:
+          type: integer
+          readOnly: true
+        id_venta:
+          type: integer
+        id_financiamiento:
+          type: integer
+          nullable: true
+        monto:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        metodo_pago:
+          $ref: '#/components/schemas/MetodoPagoEnum'
+        tipo_pago:
+          $ref: '#/components/schemas/TipoPagoEnum'
+        estado:
+          $ref: '#/components/schemas/Estado908Enum'
+        fecha_pago:
+          type: string
+          format: date-time
+          readOnly: true
+        referencia:
+          type: string
+          maxLength: 150
+        comprobante:
+          type: string
+          format: uri
+          nullable: true
+        procesado_por:
+          type: integer
+          readOnly: true
+          nullable: true
+        procesado_por_info:
+          type: string
+          readOnly: true
+      required:
+      - fecha_pago
+      - id_pago
+      - id_venta
+      - metodo_pago
+      - monto
+      - procesado_por
+      - procesado_por_info
+    PagoCreate:
+      type: object
+      description: Serializer para registrar un nuevo pago (validación de formato).
+      properties:
+        id_venta:
+          type: integer
+        id_financiamiento:
+          type: integer
+          nullable: true
+        monto:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        metodo_pago:
+          $ref: '#/components/schemas/MetodoPagoEnum'
+        tipo_pago:
+          $ref: '#/components/schemas/TipoPagoEnum'
+        estado:
+          $ref: '#/components/schemas/Estado908Enum'
+        referencia:
+          type: string
+          maxLength: 150
+        comprobante:
+          type: string
+          format: uri
+          nullable: true
+      required:
+      - id_venta
+      - metodo_pago
+      - monto
+    PatchedCarritoCompras:
+      type: object
+      description: Serializer de carrito_compras con nombres exactos del esquema SQL.
+      properties:
+        id_carrito:
+          type: integer
+          readOnly: true
+        username_cliente:
+          type: string
+          readOnly: true
+        id_usuario_cliente:
+          type: integer
+          readOnly: true
+        estado:
+          $ref: '#/components/schemas/CarritoComprasEstadoEnum'
+        fecha_creacion:
+          type: string
+          format: date-time
+          readOnly: true
+        num_items:
+          type: string
+          readOnly: true
+        total:
+          type: string
+          readOnly: true
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemCarrito'
+          readOnly: true
+    PatchedCategoriaMoto:
+      type: object
+      properties:
+        id_categoria:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 100
+        descripcion:
+          type: string
+          nullable: true
+        estado:
+          type: boolean
+    PatchedCompra:
+      type: object
+      properties:
+        id_compra:
+          type: integer
+          readOnly: true
+        proveedor:
+          type: integer
+        moto:
+          type: integer
+          nullable: true
+        repuesto:
+          type: integer
+          nullable: true
+        cantidad:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        precio_unitario:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        fecha_compra:
+          type: string
+          format: date-time
+          readOnly: true
+        estado:
+          $ref: '#/components/schemas/CompraEstadoEnum'
+        stock_aplicado:
+          type: boolean
+          readOnly: true
+    PatchedFinanciamiento:
+      type: object
+      description: Serializer de financiamientos con nombres exactos del esquema SQL.
+      properties:
+        id_financiamiento:
+          type: integer
+          readOnly: true
+        id_venta:
+          type: integer
+        entidad_financiera:
+          type: string
+          maxLength: 100
+        monto_financiado:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        entrada:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        saldo_pendiente:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        tasa_interes:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,3}(?:\.\d{0,2})?$
+        plazo_meses:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        cuota_mensual:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        estado:
+          $ref: '#/components/schemas/Estado5abEnum'
+    PatchedGarantia:
+      type: object
+      description: Serializer de garantías con nombres exactos del esquema SQL.
+      properties:
+        id_garantia:
+          type: integer
+          readOnly: true
+        id_venta:
+          type: integer
+        id_moto:
+          type: integer
+        meses_garantia:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        fecha_inicio:
+          type: string
+          format: date
+        fecha_fin:
+          type: string
+          format: date
+        descripcion:
+          type: string
+        estado:
+          $ref: '#/components/schemas/EstadoB61Enum'
+    PatchedItemCarrito:
+      type: object
+      description: Serializer de items_carrito con nombres exactos del esquema SQL.
+      properties:
+        id_item:
+          type: integer
+          readOnly: true
+        id_carrito:
+          type: integer
+        id_moto:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        id_repuesto:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        cantidad:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        precio_unitario:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+    PatchedMantenimiento:
+      type: object
+      properties:
+        id_mantenimiento:
+          type: integer
+          readOnly: true
+        moto:
+          type: integer
+        usuario_cliente:
+          type: integer
+        servicio:
+          type: integer
+        kilometraje_actual:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        diagnostico_inicial:
+          type: string
+          nullable: true
+        costo_final:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        estado:
+          $ref: '#/components/schemas/MantenimientoEstadoEnum'
+        fecha_registro:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedMarca:
+      type: object
+      properties:
+        id_marca:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 150
+        descripcion:
+          type: string
+          nullable: true
+        estado:
+          type: boolean
+    PatchedMoto:
+      type: object
+      properties:
+        id_moto:
+          type: integer
+          readOnly: true
+        modelo:
+          type: string
+          maxLength: 150
+        anio:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        cilindraje:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        color:
+          type: string
+          maxLength: 50
+        precio:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        stock:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        estado:
+          type: string
+          maxLength: 30
+        imagen:
+          type: string
+          format: uri
+          nullable: true
+        fecha_registro:
+          type: string
+          format: date-time
+          readOnly: true
+        categoria:
+          type: integer
+        marca:
+          type: integer
+    PatchedNotificacion:
+      type: object
+      description: Serializer de notificaciones con nombres exactos del esquema SQL.
+      properties:
+        id_notificacion:
+          type: integer
+          readOnly: true
+        id_usuario:
+          type: integer
+          readOnly: true
+        titulo:
+          type: string
+          maxLength: 150
+        mensaje:
+          type: string
+        leido:
+          type: boolean
+        fecha_creacion:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedPedido:
+      type: object
+      description: Serializer de pedidos con nombres exactos del esquema SQL.
+      properties:
+        id_pedido:
+          type: integer
+          readOnly: true
+        username_cliente:
+          type: string
+          readOnly: true
+        id_usuario_cliente:
+          type: integer
+          readOnly: true
+        id_carrito:
+          type: integer
+          nullable: true
+        carrito:
+          allOf:
+          - $ref: '#/components/schemas/CarritoCompras'
+          readOnly: true
+        estado:
+          allOf:
+          - $ref: '#/components/schemas/PedidoEstadoEnum'
+          readOnly: true
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        fecha_pedido:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedProveedor:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 120
+        contacto:
+          type: string
+          nullable: true
+          maxLength: 100
+        telefono:
+          type: string
+          nullable: true
+          maxLength: 20
+        correo:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        direccion:
+          type: string
+          nullable: true
+        estado:
+          type: boolean
+    PatchedRepuesto:
+      type: object
+      properties:
+        id_repuesto:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 150
+        descripcion:
+          type: string
+          nullable: true
+        sku:
+          type: string
+          maxLength: 50
+        costo:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        precio_venta:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        stock:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        estado:
+          type: string
+          maxLength: 50
+        imagen:
+          type: string
+          format: uri
+          nullable: true
+        fecha_registro:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedRepuestoMantenimiento:
+      type: object
+      properties:
+        id_repuesto_mantenimiento:
+          type: integer
+          readOnly: true
+        mantenimiento:
+          type: integer
+        repuesto:
+          type: integer
+        cantidad:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        precio_unitario:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+    PatchedSeguro:
+      type: object
+      description: Serializer de seguros con nombres exactos del esquema SQL.
+      properties:
+        id_seguro:
+          type: integer
+          readOnly: true
+        id_venta:
+          type: integer
+        aseguradora:
+          type: string
+          maxLength: 100
+        numero_poliza:
+          type: string
+          maxLength: 100
+        tipo_cobertura:
+          type: string
+          maxLength: 50
+        fecha_inicio:
+          type: string
+          format: date
+        fecha_fin:
+          type: string
+          format: date
+        costo_anual:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        estado:
+          $ref: '#/components/schemas/EstadoC59Enum'
+    PatchedServicio:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 150
+        descripcion:
+          type: string
+          nullable: true
+        precio_base:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        tiempo_estimado_minutos:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        estado:
+          type: boolean
+        fecha_creacion:
+          type: string
+          format: date-time
+          readOnly: true
+        fecha_actualizacion:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedUser:
+      type: object
+      description: |-
+        Vista completa del usuario para staff.
+        num_orders agregado en Etapa 5 con el modelo Pedido disponible.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        is_staff:
+          type: boolean
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+        role:
+          type: string
+          readOnly: true
+        num_orders:
+          type: string
+          readOnly: true
+    PatchedVenta:
+      type: object
+      description: Serializer de ventas con nombres exactos del esquema SQL.
+      properties:
+        id_venta:
+          type: integer
+          readOnly: true
+        id_pedido:
+          type: integer
+        username_cliente:
+          type: string
+          readOnly: true
+        id_usuario_cliente:
+          type: integer
+          readOnly: true
+        username_vendedor:
+          type: string
+          readOnly: true
+        id_usuario_vendedor:
+          type: integer
+          readOnly: true
+        procesado_por:
+          type: string
+          readOnly: true
+        total_venta:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        total_pagado:
+          type: string
+          readOnly: true
+        saldo_pendiente:
+          type: string
+          readOnly: true
+        estado:
+          $ref: '#/components/schemas/Estado59dEnum'
+        fecha_venta:
+          type: string
+          format: date-time
+          readOnly: true
+        num_financiamientos:
+          type: string
+          readOnly: true
+        financiamientos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Financiamiento'
+          readOnly: true
+    Pedido:
+      type: object
+      description: Serializer de pedidos con nombres exactos del esquema SQL.
+      properties:
+        id_pedido:
+          type: integer
+          readOnly: true
+        username_cliente:
+          type: string
+          readOnly: true
+        id_usuario_cliente:
+          type: integer
+          readOnly: true
+        id_carrito:
+          type: integer
+          nullable: true
+        carrito:
+          allOf:
+          - $ref: '#/components/schemas/CarritoCompras'
+          readOnly: true
+        estado:
+          allOf:
+          - $ref: '#/components/schemas/PedidoEstadoEnum'
+          readOnly: true
+        total:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        fecha_pedido:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - carrito
+      - estado
+      - fecha_pedido
+      - id_pedido
+      - id_usuario_cliente
+      - total
+      - username_cliente
+    PedidoCreate:
+      type: object
+      description: |-
+        Serializer para crear un pedido desde un carrito activo.
+        Body: { "id_carrito": 1 }
+      properties:
+        id_carrito:
+          type: integer
+      required:
+      - id_carrito
+    PedidoEstadoEnum:
+      enum:
+      - pending
+      - confirmed
+      - shipped
+      - delivered
+      - cancelled
+      type: string
+      description: |-
+        * `pending` - Pendiente
+        * `confirmed` - Confirmado
+        * `shipped` - Enviado
+        * `delivered` - Entregado
+        * `cancelled` - Cancelado
+    Proveedor:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 120
+        contacto:
+          type: string
+          nullable: true
+          maxLength: 100
+        telefono:
+          type: string
+          nullable: true
+          maxLength: 20
+        correo:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        direccion:
+          type: string
+          nullable: true
+        estado:
+          type: boolean
+      required:
+      - id
+      - nombre
+    Repuesto:
+      type: object
+      properties:
+        id_repuesto:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 150
+        descripcion:
+          type: string
+          nullable: true
+        sku:
+          type: string
+          maxLength: 50
+        costo:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        precio_venta:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        stock:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        estado:
+          type: string
+          maxLength: 50
+        imagen:
+          type: string
+          format: uri
+          nullable: true
+        fecha_registro:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - costo
+      - estado
+      - fecha_registro
+      - id_repuesto
+      - nombre
+      - precio_venta
+      - sku
+      - stock
+    RepuestoMantenimiento:
+      type: object
+      properties:
+        id_repuesto_mantenimiento:
+          type: integer
+          readOnly: true
+        mantenimiento:
+          type: integer
+        repuesto:
+          type: integer
+        cantidad:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        precio_unitario:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        subtotal:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+      required:
+      - cantidad
+      - id_repuesto_mantenimiento
+      - mantenimiento
+      - precio_unitario
+      - repuesto
+      - subtotal
+    Seguro:
+      type: object
+      description: Serializer de seguros con nombres exactos del esquema SQL.
+      properties:
+        id_seguro:
+          type: integer
+          readOnly: true
+        id_venta:
+          type: integer
+        aseguradora:
+          type: string
+          maxLength: 100
+        numero_poliza:
+          type: string
+          maxLength: 100
+        tipo_cobertura:
+          type: string
+          maxLength: 50
+        fecha_inicio:
+          type: string
+          format: date
+        fecha_fin:
+          type: string
+          format: date
+        costo_anual:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        estado:
+          $ref: '#/components/schemas/EstadoC59Enum'
+      required:
+      - aseguradora
+      - costo_anual
+      - fecha_fin
+      - fecha_inicio
+      - id_seguro
+      - id_venta
+      - numero_poliza
+      - tipo_cobertura
+    SeguroCreate:
+      type: object
+      description: Serializer para registrar un seguro.
+      properties:
+        id_venta:
+          type: integer
+        aseguradora:
+          type: string
+          maxLength: 100
+        numero_poliza:
+          type: string
+          maxLength: 100
+        tipo_cobertura:
+          type: string
+          maxLength: 50
+        fecha_inicio:
+          type: string
+          format: date
+        fecha_fin:
+          type: string
+          format: date
+        costo_anual:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        estado:
+          $ref: '#/components/schemas/EstadoC59Enum'
+      required:
+      - aseguradora
+      - costo_anual
+      - fecha_fin
+      - fecha_inicio
+      - id_venta
+      - numero_poliza
+      - tipo_cobertura
+    Servicio:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 150
+        descripcion:
+          type: string
+          nullable: true
+        precio_base:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+        tiempo_estimado_minutos:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        estado:
+          type: boolean
+        fecha_creacion:
+          type: string
+          format: date-time
+          readOnly: true
+        fecha_actualizacion:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - fecha_actualizacion
+      - fecha_creacion
+      - id
+      - nombre
+      - precio_base
+      - tiempo_estimado_minutos
+    TipoDocumentoEnum:
+      enum:
+      - contrato
+      - factura
+      - soat
+      - garantia
+      - traspaso
+      - otro
+      type: string
+      description: |-
+        * `contrato` - Contrato
+        * `factura` - Factura
+        * `soat` - SOAT
+        * `garantia` - Garantía
+        * `traspaso` - Traspaso
+        * `otro` - Otro
+    TipoPagoEnum:
+      enum:
+      - contado
+      - entrada
+      - cuota
+      - abono
+      - reembolso
+      type: string
+      description: |-
+        * `contado` - Contado
+        * `entrada` - Entrada
+        * `cuota` - Cuota
+        * `abono` - Abono
+        * `reembolso` - Reembolso
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    TokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+      required:
+      - token
+    User:
+      type: object
+      description: |-
+        Vista completa del usuario para staff.
+        num_orders agregado en Etapa 5 con el modelo Pedido disponible.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        is_staff:
+          type: boolean
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        is_active:
+          type: boolean
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+        role:
+          type: string
+          readOnly: true
+        num_orders:
+          type: string
+          readOnly: true
+      required:
+      - date_joined
+      - id
+      - num_orders
+      - role
+      - username
+    Venta:
+      type: object
+      description: Serializer de ventas con nombres exactos del esquema SQL.
+      properties:
+        id_venta:
+          type: integer
+          readOnly: true
+        id_pedido:
+          type: integer
+        username_cliente:
+          type: string
+          readOnly: true
+        id_usuario_cliente:
+          type: integer
+          readOnly: true
+        username_vendedor:
+          type: string
+          readOnly: true
+        id_usuario_vendedor:
+          type: integer
+          readOnly: true
+        procesado_por:
+          type: string
+          readOnly: true
+        total_venta:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        total_pagado:
+          type: string
+          readOnly: true
+        saldo_pendiente:
+          type: string
+          readOnly: true
+        estado:
+          $ref: '#/components/schemas/Estado59dEnum'
+        fecha_venta:
+          type: string
+          format: date-time
+          readOnly: true
+        num_financiamientos:
+          type: string
+          readOnly: true
+        financiamientos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Financiamiento'
+          readOnly: true
+      required:
+      - fecha_venta
+      - financiamientos
+      - id_pedido
+      - id_usuario_cliente
+      - id_usuario_vendedor
+      - id_venta
+      - num_financiamientos
+      - procesado_por
+      - saldo_pendiente
+      - total_pagado
+      - total_venta
+      - username_cliente
+      - username_vendedor
+    VentaCreate:
+      type: object
+      description: |-
+        Serializer para registrar una venta desde un pedido confirmado.
+
+        Body: { "id_pedido": 1, "estado": "pendiente" }
+
+        El total se calcula en backend; total_venta del frontend se ignora.
+      properties:
+        id_pedido:
+          type: integer
+        estado:
+          $ref: '#/components/schemas/Estado59dEnum'
+      required:
+      - id_pedido
+    VentaDetail:
+      type: object
+      description: Serializer de ventas con nombres exactos del esquema SQL.
+      properties:
+        id_venta:
+          type: integer
+          readOnly: true
+        id_pedido:
+          type: integer
+        username_cliente:
+          type: string
+          readOnly: true
+        id_usuario_cliente:
+          type: integer
+          readOnly: true
+        username_vendedor:
+          type: string
+          readOnly: true
+        id_usuario_vendedor:
+          type: integer
+          readOnly: true
+        procesado_por:
+          type: string
+          readOnly: true
+        total_venta:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,10}(?:\.\d{0,2})?$
+          readOnly: true
+        total_pagado:
+          type: string
+          readOnly: true
+        saldo_pendiente:
+          type: string
+          readOnly: true
+        estado:
+          $ref: '#/components/schemas/Estado59dEnum'
+        fecha_venta:
+          type: string
+          format: date-time
+          readOnly: true
+        num_financiamientos:
+          type: string
+          readOnly: true
+        financiamientos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Financiamiento'
+          readOnly: true
+        pedido:
+          allOf:
+          - $ref: '#/components/schemas/Pedido'
+          readOnly: true
+        pagos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pago'
+          readOnly: true
+        financiamiento:
+          type: string
+          readOnly: true
+        factura:
+          allOf:
+          - $ref: '#/components/schemas/Factura'
+          readOnly: true
+      required:
+      - factura
+      - fecha_venta
+      - financiamiento
+      - financiamientos
+      - id_pedido
+      - id_usuario_cliente
+      - id_usuario_vendedor
+      - id_venta
+      - num_financiamientos
+      - pagos
+      - pedido
+      - procesado_por
+      - saldo_pendiente
+      - total_pagado
+      - total_venta
+      - username_cliente
+      - username_vendedor
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -11,9 +11,9 @@ class HistorialEstadoVentaSerializer(serializers.ModelSerializer):
         fields = [
             'id_historial', 'id_venta',
             'estado_anterior', 'estado_nuevo',
-            'fecha_cambio', 'observacion',
+            'fecha_cambio', 'observacion', 'id_usuario',
         ]
-        read_only_fields = ['id_historial', 'fecha_cambio']
+        read_only_fields = fields
 
 
 class HistorialEstadoVentaCreateSerializer(serializers.ModelSerializer):

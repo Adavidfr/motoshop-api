@@ -1,4 +1,5 @@
 # motoshop/models/historial_estado_venta.py
+from django.conf import settings
 from django.db import models
 from .venta import Venta
 
@@ -17,6 +18,14 @@ class HistorialEstadoVenta(models.Model):
     estado_nuevo    = models.CharField(max_length=30)
     fecha_cambio    = models.DateTimeField(auto_now_add=True)
     observacion     = models.TextField(blank=True, default='')
+    id_usuario      = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='historial_ventas_registradas',
+        db_column='id_usuario',
+    )
 
     class Meta:
         db_table = 'historial_estado_venta'

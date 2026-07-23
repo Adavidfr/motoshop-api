@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-ROLES = ['admin', 'usuario', 'cliente', 'vendedor']
+ROLES = ['admin', 'usuario', 'cliente']
 
 
 class MotoshopConfig(AppConfig):

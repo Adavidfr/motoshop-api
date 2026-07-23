@@ -35,3 +35,13 @@ class MantenimientoSerializer(serializers.ModelSerializer):
                 "El costo final no puede ser negativo."
             )
         return value
+
+    def validate(self, data):
+        request = self.context.get('request')
+        if request and not request.user.is_staff:
+            usuario = data.get('usuario_cliente')
+            if usuario and usuario.id != request.user.id:
+                raise serializers.ValidationError(
+                    {'usuario_cliente': 'Solo puedes registrar mantenimientos para tu cuenta.'}
+                )
+        return data

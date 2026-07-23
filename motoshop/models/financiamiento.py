@@ -25,6 +25,8 @@ class Financiamiento(models.Model):
     tasa_interes       = models.DecimalField(max_digits=5,  decimal_places=2)
     plazo_meses        = models.PositiveIntegerField()
     cuota_mensual      = models.DecimalField(max_digits=12, decimal_places=2)
+    entrada            = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    saldo_pendiente    = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     estado             = models.CharField(
         max_length=30,
         choices=ESTADO_CHOICES,
@@ -33,6 +35,9 @@ class Financiamiento(models.Model):
 
     class Meta:
         db_table = 'financiamientos'
+        constraints = [
+            models.UniqueConstraint(fields=['id_venta'], name='uniq_financiamiento_por_venta'),
+        ]
 
     def __str__(self):
         return f'Financiamiento #{self.id_financiamiento} — {self.entidad_financiera} ({self.estado})'

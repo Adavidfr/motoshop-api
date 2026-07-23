@@ -1,12 +1,18 @@
 """
 motoshop/permissions.py
 -----------------------
-Custom permission classes based on Django Groups.
+Custom permission classes based on Django staff flags and groups.
 
-Grupos disponibles: admin, usuario, cliente, vendedor
+Roles funcionales: administrador (is_staff) y cliente (no staff).
+Los grupos legacy en auth_group ya no determinan permisos de escritura.
 """
 
 from rest_framework.permissions import BasePermission, SAFE_METHODS
+
+
+def _is_administrator(user) -> bool:
+    """Helper: usuario con privilegios administrativos."""
+    return user.is_authenticated and (user.is_superuser or user.is_staff)
 
 
 def _user_in_group(user, group_name: str) -> bool:
@@ -15,12 +21,10 @@ def _user_in_group(user, group_name: str) -> bool:
 
 
 class IsAdmin(BasePermission):
-    """Solo usuarios del grupo 'admin' (o is_superuser)."""
+    """Solo usuarios administrativos (is_staff o is_superuser)."""
 
     def has_permission(self, request, view):
-        return request.user.is_authenticated and (
-            request.user.is_superuser or _user_in_group(request.user, 'admin')
-        )
+        return _is_administrator(request.user)
 
 
 class IsUsuario(BasePermission):
@@ -37,35 +41,29 @@ class IsCliente(BasePermission):
         return _user_in_group(request.user, 'cliente')
 
 
-class IsVendedor(BasePermission):
-    """Solo usuarios del grupo 'vendedor'."""
+class IsClientWriteOrStaffReadOnly(BasePermission):
+    """
+    Lectura para cualquier usuario autenticado (incluido staff).
+    Escritura solo para clientes (usuarios no staff).
+    """
 
     def has_permission(self, request, view):
-        return _user_in_group(request.user, 'vendedor')
-
-
-class IsAdminOrVendedor(BasePermission):
-    """Admin o vendedor pueden actuar."""
-
-    def has_permission(self, request, view):
-        return request.user.is_authenticated and (
-            request.user.is_superuser
-            or _user_in_group(request.user, 'admin')
-            or _user_in_group(request.user, 'vendedor')
-        )
+        if not request.user or not request.user.is_authenticated:
+            return False
+        if request.method in SAFE_METHODS:
+            return True
+        return not request.user.is_staff
 
 
 class IsAdminOrReadOnly(BasePermission):
     """
-    Lectura libre para todos, escritura solo para admin.
+    Lectura libre para todos, escritura solo para administradores (is_staff).
     """
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
-        return request.user.is_authenticated and (
-            request.user.is_superuser or _user_in_group(request.user, 'admin')
-        )
+        return _is_administrator(request.user)
 
 
 class IsStaffOrReadOnly(BasePermission):
@@ -82,3 +80,10 @@ class IsOwnerOrStaff(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return obj.user == request.user or request.user.is_staff
+
+
+def filter_queryset_by_venta_owner(queryset, user, venta_field='id_venta'):
+    """Filtra registros postventa al cliente propietario de la venta."""
+    if user.is_staff:
+        return queryset
+    return queryset.filter(**{f'{venta_field}__id_usuario_cliente': user})

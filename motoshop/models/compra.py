@@ -58,6 +58,8 @@ class Compra(models.Model):
         default='Pendiente'
     )
 
+    stock_aplicado = models.BooleanField(default=False)
+
     class Meta:
         db_table = "compras"
         verbose_name = "Compra"

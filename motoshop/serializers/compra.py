@@ -16,10 +16,12 @@ class CompraSerializer(serializers.ModelSerializer):
             'subtotal',
             'fecha_compra',
             'estado',
+            'stock_aplicado',
         ]
         read_only_fields = [
             'id_compra',
             'fecha_compra',
+            'stock_aplicado',
         ]
 
     def validate_cantidad(self, value):
