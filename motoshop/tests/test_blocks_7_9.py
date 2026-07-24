@@ -125,15 +125,24 @@ class Block8OwnerFilteredReadTests(TestCase):
         self.pedido_b = self._create_venta(self.client_b)
         self.venta_b = Venta.objects.get(id_pedido=self.pedido_b)
 
+        self.pago_a = Pago.objects.create(
+            id_venta=self.venta_a, monto=Decimal('1000.00'), metodo_pago='efectivo',
+            estado='completado', tipo_pago='contado', procesado_por=self.staff,
+        )
+        self.pago_b = Pago.objects.create(
+            id_venta=self.venta_b, monto=Decimal('1000.00'), metodo_pago='efectivo',
+            estado='completado', tipo_pago='contado', procesado_por=self.staff,
+        )
+
         self.factura_a = Factura.objects.create(
-            id_venta=self.venta_a,
+            id_pago=self.pago_a,
             numero_factura='FAC-001',
             subtotal=Decimal('900.00'),
             iva=Decimal('100.00'),
             total=Decimal('1000.00'),
         )
         self.factura_b = Factura.objects.create(
-            id_venta=self.venta_b,
+            id_pago=self.pago_b,
             numero_factura='FAC-002',
             subtotal=Decimal('900.00'),
             iva=Decimal('100.00'),

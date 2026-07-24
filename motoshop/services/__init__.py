@@ -14,6 +14,7 @@ from motoshop.services.mantenimiento_service import MantenimientoService
 from motoshop.services.notificacion_service import NotificacionService
 from motoshop.services.pago_service import PagoService
 from motoshop.services.pedido_service import PedidoService
+from motoshop.services.seguro_service import SeguroService
 from motoshop.services.venta_service import VentaService
 
 __all__ = [
@@ -31,5 +32,6 @@ __all__ = [
     'NotificacionService',
     'PagoService',
     'PedidoService',
+    'SeguroService',
     'VentaService',
 ]

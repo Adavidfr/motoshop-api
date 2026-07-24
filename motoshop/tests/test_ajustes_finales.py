@@ -82,17 +82,25 @@ class AjustesFinalesTests(TestCase):
     @override_settings(MOTOSHOP_IVA_RATE=Decimal('0.15'))
     def test_iva_configurable_decimal_sin_doble_aplicacion(self):
         pedido, venta = self._venta_confirmada()
-        factura = FacturaService.emitir(venta, 'FAC-IVA-001')
-        subtotal, iva, total = descomponer_total_con_iva(venta.total_venta)
+        pago = Pago.objects.create(
+            id_venta=venta, monto=venta.total_venta, metodo_pago='efectivo',
+            estado='completado', tipo_pago='contado', procesado_por=self.admin,
+        )
+        factura = FacturaService.emitir(pago, 'FAC-IVA-001')
+        subtotal, iva, total = descomponer_total_con_iva(pago.monto)
         self.assertEqual(factura.subtotal, subtotal)
         self.assertEqual(factura.iva, iva)
-        self.assertEqual(factura.total, venta.total_venta)
+        self.assertEqual(factura.total, pago.monto)
         self.assertEqual(subtotal + iva, total)
 
     @override_settings(MOTOSHOP_IVA_RATE=Decimal('0.10'))
     def test_iva_distinta_por_settings(self):
         _, venta = self._venta_confirmada()
-        factura = FacturaService.emitir(venta, 'FAC-IVA-002')
+        pago = Pago.objects.create(
+            id_venta=venta, monto=Decimal('7000.00'), metodo_pago='efectivo',
+            estado='completado', tipo_pago='contado', procesado_por=self.admin,
+        )
+        factura = FacturaService.emitir(pago, 'FAC-IVA-002')
         subtotal, iva, _ = descomponer_total_con_iva(Decimal('7000.00'))
         self.assertEqual(factura.subtotal, subtotal)
         self.assertEqual(factura.iva, iva)
@@ -171,7 +179,11 @@ class AjustesFinalesTests(TestCase):
 
     def test_numero_factura_autogenerado_formato(self):
         _, venta = self._venta_confirmada()
-        factura = FacturaService.emitir(venta)
+        pago = Pago.objects.create(
+            id_venta=venta, monto=venta.total_venta, metodo_pago='efectivo',
+            estado='completado', tipo_pago='contado', procesado_por=self.admin,
+        )
+        factura = FacturaService.emitir(pago)
         self.assertRegex(factura.numero_factura, r'^FAC-\d{4}-\d{6}$')
 
     def test_numero_factura_secuencial_por_anio(self):
@@ -179,29 +191,139 @@ class AjustesFinalesTests(TestCase):
 
         year = timezone.now().year
         _, venta1 = self._venta_confirmada()
-        f1 = FacturaService.emitir(venta1)
+        pago1 = Pago.objects.create(
+            id_venta=venta1, monto=venta1.total_venta, metodo_pago='efectivo',
+            estado='completado', tipo_pago='contado', procesado_por=self.admin,
+        )
+        f1 = FacturaService.emitir(pago1)
         Factura.objects.filter(pk=f1.pk).update(numero_factura=f'FAC-{year}-000005')
 
         _, venta2 = self._venta_confirmada()
-        f2 = FacturaService.emitir(venta2)
+        pago2 = Pago.objects.create(
+            id_venta=venta2, monto=venta2.total_venta, metodo_pago='efectivo',
+            estado='completado', tipo_pago='contado', procesado_por=self.admin,
+        )
+        f2 = FacturaService.emitir(pago2)
         self.assertEqual(f2.numero_factura, f'FAC-{year}-000006')
 
-    def test_api_emitir_factura_solo_id_venta(self):
+    def test_api_emitir_factura_solo_id_pago(self):
         _, venta = self._venta_confirmada()
+        pago = Pago.objects.create(
+            id_venta=venta, monto=venta.total_venta, metodo_pago='efectivo',
+            estado='completado', tipo_pago='contado', procesado_por=self.admin,
+        )
         self.client.force_authenticate(user=self.admin)
         response = self.client.post('/api/facturas/', {
-            'id_venta': venta.pk,
+            'id_pago': pago.pk,
         }, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertRegex(response.data['numero_factura'], r'^FAC-\d{4}-\d{6}$')
+        self.assertEqual(response.data['id_pago'], pago.pk)
         self.assertEqual(response.data['id_venta'], venta.pk)
 
     def test_api_rechaza_numero_factura_manual(self):
         _, venta = self._venta_confirmada()
+        pago = Pago.objects.create(
+            id_venta=venta, monto=venta.total_venta, metodo_pago='efectivo',
+            estado='completado', tipo_pago='contado', procesado_por=self.admin,
+        )
         self.client.force_authenticate(user=self.admin)
         response = self.client.post('/api/facturas/', {
-            'id_venta': venta.pk,
+            'id_pago': pago.pk,
             'numero_factura': 'FAC-MANUAL-001',
         }, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('numero_factura', response.data)
+
+    def test_factura_por_cada_pago_sin_factura_global(self):
+        _, venta = self._venta_confirmada()
+        pago1 = Pago.objects.create(
+            id_venta=venta, monto=Decimal('2000.00'), metodo_pago='efectivo',
+            estado='completado', tipo_pago='entrada', procesado_por=self.admin,
+        )
+        pago2 = Pago.objects.create(
+            id_venta=venta, monto=Decimal('500.00'), metodo_pago='transferencia',
+            estado='completado', tipo_pago='cuota', procesado_por=self.admin,
+        )
+        f1 = FacturaService.emitir(pago1)
+        f2 = FacturaService.emitir(pago2)
+        self.assertEqual(f1.total, Decimal('2000.00'))
+        self.assertEqual(f2.total, Decimal('500.00'))
+        self.assertEqual(
+            Factura.objects.filter(id_pago__id_venta=venta).count(),
+            2,
+        )
+
+    def test_pago_serializer_incluye_factura_resumen(self):
+        _, venta = self._venta_confirmada()
+        pago = Pago.objects.create(
+            id_venta=venta, monto=Decimal('500.00'), metodo_pago='efectivo',
+            estado='completado', tipo_pago='cuota', procesado_por=self.admin,
+        )
+        factura = FacturaService.emitir(pago, 'FAC-PAGO-RES-001')
+
+        from motoshop.serializers.pago import PagoSerializer
+        data = PagoSerializer(pago).data
+        self.assertIsNotNone(data['factura'])
+        self.assertEqual(data['factura']['id_factura'], factura.id_factura)
+        self.assertEqual(data['factura']['numero_factura'], 'FAC-PAGO-RES-001')
+
+    def test_pago_sin_factura_devuelve_null(self):
+        _, venta = self._venta_confirmada()
+        pago = Pago.objects.create(
+            id_venta=venta, monto=Decimal('300.00'), metodo_pago='efectivo',
+            estado='completado', tipo_pago='contado', procesado_por=self.admin,
+        )
+        from motoshop.serializers.pago import PagoSerializer
+        data = PagoSerializer(pago).data
+        self.assertIsNone(data['factura'])
+
+    def test_rechaza_factura_duplicada_mismo_pago(self):
+        _, venta = self._venta_confirmada()
+        pago = Pago.objects.create(
+            id_venta=venta, monto=Decimal('1000.00'), metodo_pago='efectivo',
+            estado='completado', tipo_pago='contado', procesado_por=self.admin,
+        )
+        FacturaService.emitir(pago)
+        with self.assertRaises(BusinessError):
+            FacturaService.emitir(pago)
+
+    def test_api_pago_list_incluye_factura(self):
+        _, venta = self._venta_confirmada()
+        pago = Pago.objects.create(
+            id_venta=venta, monto=Decimal('750.00'), metodo_pago='tarjeta',
+            estado='completado', tipo_pago='contado', procesado_por=self.admin,
+        )
+        FacturaService.emitir(pago)
+        self.client.force_authenticate(user=self.admin)
+        response = self.client.get('/api/pagos/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        item = next(r for r in response.data['results'] if r['id_pago'] == pago.pk)
+        self.assertIsNotNone(item['factura'])
+        self.assertIn('numero_factura', item['factura'])
+
+    def test_api_factura_pdf_descarga(self):
+        _, venta = self._venta_confirmada()
+        pago = Pago.objects.create(
+            id_venta=venta, monto=Decimal('500.00'), metodo_pago='efectivo',
+            estado='completado', tipo_pago='cuota', procesado_por=self.admin,
+        )
+        factura = FacturaService.emitir(pago)
+        self.client.force_authenticate(user=self.admin)
+        response = self.client.get(f'/api/facturas/{factura.pk}/pdf/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response['Content-Type'], 'application/pdf')
+        self.assertIn('attachment', response['Content-Disposition'])
+        self.assertTrue(response.content.startswith(b'%PDF'))
+
+    def test_api_factura_pdf_inline_para_impresion(self):
+        _, venta = self._venta_confirmada()
+        pago = Pago.objects.create(
+            id_venta=venta, monto=Decimal('300.00'), metodo_pago='efectivo',
+            estado='completado', tipo_pago='contado', procesado_por=self.admin,
+        )
+        factura = FacturaService.emitir(pago)
+        self.client.force_authenticate(user=self.admin)
+        response = self.client.get(f'/api/facturas/{factura.pk}/pdf/?inline=1')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('inline', response['Content-Disposition'])

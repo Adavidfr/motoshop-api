@@ -120,10 +120,12 @@ class PagoFilter(django_filters.FilterSet):
 
 class FacturaFilter(django_filters.FilterSet):
     numero_factura = django_filters.CharFilter(lookup_expr='icontains')
+    id_venta = django_filters.NumberFilter(field_name='id_pago__id_venta')
+    id_pago = django_filters.NumberFilter(field_name='id_pago')
 
     class Meta:
         model  = Factura
-        fields = ['id_venta']
+        fields = ['id_venta', 'id_pago']
 
 
 class GarantiaFilter(django_filters.FilterSet):

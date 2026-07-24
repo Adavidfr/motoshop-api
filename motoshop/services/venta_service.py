@@ -118,7 +118,8 @@ class VentaService:
         from motoshop.serializers.pedido import PedidoSerializer
 
         financiamiento = venta.financiamientos.first()
-        factura = getattr(venta, 'factura', None)
+        from motoshop.models import Factura
+        facturas = Factura.objects.filter(id_pago__id_venta=venta).select_related('id_pago')
         total_pagado = cls.total_pagado(venta)
 
         return {
@@ -136,7 +137,7 @@ class VentaService:
             'financiamiento': (
                 FinanciamientoSerializer(financiamiento).data if financiamiento else None
             ),
-            'factura': FacturaSerializer(factura).data if factura else None,
+            'facturas': FacturaSerializer(facturas, many=True).data,
             'garantias': GarantiaSerializer(venta.garantias.all(), many=True).data,
             'seguros': SeguroSerializer(venta.seguros.all(), many=True).data,
             'documentos': DocumentoVentaSerializer(venta.documentos.all(), many=True).data,

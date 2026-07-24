@@ -29,7 +29,8 @@ class PagoViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         qs = Pago.objects.select_related(
-            'id_venta', 'id_venta__id_usuario_cliente', 'procesado_por', 'id_financiamiento',
+            'id_venta', 'id_venta__id_usuario_cliente', 'procesado_por',
+            'id_financiamiento', 'factura',
         ).all()
         return filter_queryset_by_venta_owner(qs, self.request.user)
 

@@ -127,3 +127,5 @@ FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:52467/#/')
 # Facturación — Venta.total_venta incluye IVA; tasa configurable vía entorno.
 from decimal import Decimal
 MOTOSHOP_IVA_RATE = Decimal(config('MOTOSHOP_IVA_RATE', default='0.12'))
+MOTOSHOP_EMPRESA_NOMBRE = config('MOTOSHOP_EMPRESA_NOMBRE', default='MotoShop')
+MOTOSHOP_EMPRESA_RUC = config('MOTOSHOP_EMPRESA_RUC', default='')

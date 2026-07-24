@@ -266,7 +266,7 @@ class PagoAdmin(admin.ModelAdmin):
 
 @admin.register(Factura)
 class FacturaAdmin(admin.ModelAdmin):
-    list_display  = ['id_factura', 'id_venta', 'numero_factura', 'subtotal', 'iva', 'total', 'fecha_emision']
+    list_display  = ['id_factura', 'id_pago', 'numero_factura', 'subtotal', 'iva', 'total', 'fecha_emision']
     list_filter   = ['fecha_emision']
     search_fields = ['numero_factura']
     ordering      = ['-fecha_emision']
@@ -293,6 +293,7 @@ class SeguroAdmin(admin.ModelAdmin):
     list_filter   = ['estado', 'tipo_cobertura']
     search_fields = ['aseguradora', 'numero_poliza']
     ordering      = ['-fecha_inicio']
+    readonly_fields = ['numero_poliza']
 
 
 # ------------------------------------------------------------------ #

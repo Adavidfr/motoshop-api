@@ -42,14 +42,25 @@ class FacturaService:
 
     @classmethod
     @transaction.atomic
-    def emitir(cls, venta, numero_factura=None, procesado_por=None):
-        if hasattr(venta, 'factura') and venta.factura is not None:
+    def emitir(cls, pago, numero_factura=None, procesado_por=None):
+        if hasattr(pago, 'factura') and pago.factura is not None:
             raise BusinessError(
-                'Esta venta ya tiene una factura emitida.',
-                field='id_venta',
+                'Este pago ya tiene una factura emitida.',
+                field='id_pago',
             )
-        if Factura.objects.filter(id_venta=venta).exists():
-            raise BusinessError('Esta venta ya tiene una factura emitida.', field='id_venta')
+        if Factura.objects.filter(id_pago=pago).exists():
+            raise BusinessError('Este pago ya tiene una factura emitida.', field='id_pago')
+
+        if pago.estado != 'completado':
+            raise BusinessError(
+                'Solo se pueden facturar pagos completados.',
+                field='id_pago',
+            )
+        if pago.tipo_pago == 'reembolso':
+            raise BusinessError(
+                'Los pagos de tipo reembolso no se facturan.',
+                field='id_pago',
+            )
 
         if numero_factura is None:
             numero_factura = cls._generar_numero_factura()
@@ -59,10 +70,10 @@ class FacturaService:
                 field='numero_factura',
             )
 
-        subtotal, iva, total = descomponer_total_con_iva(venta.total_venta)
+        subtotal, iva, total = descomponer_total_con_iva(pago.monto)
 
         factura = Factura.objects.create(
-            id_venta=venta,
+            id_pago=pago,
             numero_factura=numero_factura,
             subtotal=subtotal,
             iva=iva,

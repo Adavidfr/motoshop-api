@@ -59,10 +59,12 @@ class NotificacionService:
 
     @staticmethod
     def factura_emitida(factura):
+        venta = factura.id_pago.id_venta
         return NotificacionService.crear(
-            factura.id_venta.id_usuario_cliente,
+            venta.id_usuario_cliente,
             'Factura emitida',
-            f'Se emitió la factura #{factura.numero_factura} por ${factura.total}.',
+            f'Se emitió la factura #{factura.numero_factura} por ${factura.total} '
+            f'(pago #{factura.id_pago_id}, venta #{venta.id_venta}).',
         )
 
     @staticmethod

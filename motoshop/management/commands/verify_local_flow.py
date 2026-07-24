@@ -155,10 +155,10 @@ class Command(BaseCommand):
             results.append(('Saldo financiamiento actualizado', fin.saldo_pendiente >= 0))
 
             # --- Factura ---
-            factura = FacturaService.emitir(venta, procesado_por=admin)
+            factura = FacturaService.emitir(pago, procesado_por=admin)
             results.append(('Factura número autogenerado', factura.numero_factura.startswith('FAC-')))
-            results.append(('Factura total = venta', factura.total == venta.total_venta))
-            base, iva, total = descomponer_total_con_iva(venta.total_venta)
+            results.append(('Factura total = pago', factura.total == pago.monto))
+            base, iva, total = descomponer_total_con_iva(pago.monto)
             results.append(('IVA no duplicado', factura.subtotal == base and factura.iva == iva))
 
             # --- Documento multipart ---
